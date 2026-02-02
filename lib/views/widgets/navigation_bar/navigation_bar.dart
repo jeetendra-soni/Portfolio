@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/dashboard/admin_dashboard.dart';
 import 'package:jeetendra_portfolio/utils/url_launcher.dart';
 import 'package:jeetendra_portfolio/views/widgets/dialogs/contact_form.dart';
 import 'package:jeetendra_portfolio/views/widgets/dialogs/login_dialog.dart';
@@ -69,6 +70,9 @@ class NavigationBarTabletDesktop extends ConsumerWidget {
                 context: context,
                 barrierDismissible: false,
                 builder: (_) => const LoginDialog(),
+                // builder: (_){
+                //   return AdminDashboard();
+                // },
               );
             },
             style: _buttonStyle,

@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jeetendra_portfolio/constants/enums.dart';
-import 'package:jeetendra_portfolio/controllers/auth_controller/auth_stats.dart';
+
+import 'auth_stats.dart';
 
 final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
   (ref) => AuthController(),
@@ -12,7 +13,9 @@ class AuthController extends StateNotifier<AuthState> {
 
   final _auth = FirebaseAuth.instance;
   bool loading = false;
-  static const adminEmail = "admin.jeetendra@gmail.com";
+  User get user => _auth.currentUser!;
+
+  static const adminEmail = "dev.jeetendra1503@gmail.com";
 
   Future<User?> login({
     required String email,

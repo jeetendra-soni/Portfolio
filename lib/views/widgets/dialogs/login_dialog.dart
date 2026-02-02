@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/authentication/auth_controller/auth_controller.dart';
 import 'package:jeetendra_portfolio/admin/dashboard/admin_dashboard.dart';
 import 'package:jeetendra_portfolio/constants/enums.dart';
-import 'package:jeetendra_portfolio/controllers/auth_controller/auth_controller.dart';
 
 class LoginDialog extends ConsumerStatefulWidget {
   const LoginDialog({super.key});

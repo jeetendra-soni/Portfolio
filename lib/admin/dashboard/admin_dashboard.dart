@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:jeetendra_portfolio/admin/skills/skill_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/skills/ui/skill_manager.dart';
 
-class AdminDashboard extends StatefulWidget {
+class AdminDashboard extends ConsumerStatefulWidget {
   const AdminDashboard({super.key});
 
   @override
-  State<AdminDashboard> createState() => _AdminDashboardState();
+  ConsumerState<AdminDashboard> createState() => _AdminDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> {
+class _AdminDashboardState extends ConsumerState<AdminDashboard> {
   int _selectedIndex = 0;
 
   /// Pages for each tab
@@ -23,13 +24,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
     ),
   ];
 
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
   void _onDestinationSelected(int index) async {
     if (index == 2) {
-      // 🔴 Logout
-      await FirebaseAuth.instance.signOut();
-      if (mounted) {
-        Navigator.of(context).pop(); // close dashboard
-      }
+      await _logout();
       return;
     }
 
@@ -40,41 +44,86 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       body: Row(
         children: [
-          /// ---------- SIDEBAR ----------
-          NavigationRail(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onDestinationSelected,
-            labelType: NavigationRailLabelType.all,
-            elevation: 2,
-            leading: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: CircleAvatar(
-                radius: 22,
-                child: Icon(Icons.admin_panel_settings),
-              ),
+          /// ---------- WEB DRAWER ----------
+          Container(
+            width: 260,
+            color: Theme.of(context).colorScheme.surface,
+            child: Column(
+              children: [
+                /// --- HEADER ---
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  width: double.infinity,
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 45,
+                        backgroundColor: Colors.white,
+                        backgroundImage: user?.photoURL != null
+                            ? NetworkImage(user!.photoURL!)
+                            : null,
+                        child: user?.photoURL == null
+                            ? const Icon(Icons.admin_panel_settings, size: 40)
+                            : null,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        user?.displayName ?? "Er. Jeetendra Soni",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        user?.email ?? "jeetendra1503@gmail.com",
+                        style: const TextStyle(fontSize: 12),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                /// --- MENU ITEMS ---
+                _drawerItem(
+                  icon: Icons.star,
+                  label: "Skills",
+                  index: 0,
+                ),
+                _drawerItem(
+                  icon: Icons.work,
+                  label: "Experience",
+                  index: 1,
+                ),
+
+                const Spacer(),
+
+                /// --- LOGOUT ---
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.logout, color: Colors.red),
+                  title: const Text("Logout"),
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    if (mounted) Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.star_border),
-                selectedIcon: Icon(Icons.star),
-                label: Text("Skills"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.work_outline),
-                selectedIcon: Icon(Icons.work),
-                label: Text("Experience"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.logout),
-                label: Text("Logout"),
-              ),
-            ],
           ),
 
-          const VerticalDivider(width: 1),
+          VerticalDivider(
+            width: 1,
+          ),
 
           /// ---------- CONTENT ----------
           Expanded(
@@ -90,4 +139,32 @@ class _AdminDashboardState extends State<AdminDashboard> {
       ),
     );
   }
+
+  Widget _drawerItem({
+    required IconData icon,
+    required String label,
+    required int index,
+  }) {
+    final isSelected = _selectedIndex == index;
+
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: isSelected ? Theme.of(context).colorScheme.primary : null,
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      onTap: () {
+        setState(() => _selectedIndex = index);
+      },
+    );
+  }
+
 }
+
+
