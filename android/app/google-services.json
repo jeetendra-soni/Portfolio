@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "35479366652",
+    "project_id": "jeetendra-soni-portfolio",
+    "storage_bucket": "jeetendra-soni-portfolio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35479366652:android:6eded4435bc9270f3d6079",
+        "android_client_info": {
+          "package_name": "com.example.jeetendra_portfolio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq4hUKFc5HcLGDfHIpOPdVdicSyhfK-00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
