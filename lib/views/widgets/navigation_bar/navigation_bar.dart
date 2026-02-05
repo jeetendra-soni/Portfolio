@@ -70,9 +70,6 @@ class NavigationBarTabletDesktop extends ConsumerWidget {
                 context: context,
                 barrierDismissible: false,
                 builder: (_) => const LoginDialog(),
-                // builder: (_){
-                //   return AdminDashboard();
-                // },
               );
             },
             style: _buttonStyle,

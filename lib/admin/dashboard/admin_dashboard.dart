@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/experience/ui/exp_manager.dart';
+import 'package:jeetendra_portfolio/admin/personal_info/ui/personal_info_page.dart';
 import 'package:jeetendra_portfolio/admin/skills/ui/skill_manager.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
@@ -15,32 +17,13 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
 
   /// Pages for each tab
   final List<Widget> _pages = [
+    PersonalInfoPage(),
     SkillManager(),
-    const Center(
-      child: Text(
-        "Experience Manager (Coming Soon)",
-        style: TextStyle(fontSize: 18),
-      ),
-    ),
+    ExperienceManager(),
+
   ];
 
-  Future<void> _logout() async {
-    await FirebaseAuth.instance.signOut();
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
-  }
 
-  void _onDestinationSelected(int index) async {
-    if (index == 2) {
-      await _logout();
-      return;
-    }
-
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,17 +76,27 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
 
                 const SizedBox(height: 8),
 
+
+
                 /// --- MENU ITEMS ---
+
+                _drawerItem(
+                  icon: Icons.person,
+                  label: "Personal Info",
+                  index: 0,
+                ),
+
                 _drawerItem(
                   icon: Icons.star,
                   label: "Skills",
-                  index: 0,
+                  index: 1,
                 ),
                 _drawerItem(
                   icon: Icons.work,
                   label: "Experience",
-                  index: 1,
+                  index: 2,
                 ),
+
 
                 const Spacer(),
 

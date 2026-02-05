@@ -196,7 +196,10 @@ class _SkillDialogState extends State<SkillDialog> {
                   const SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: _onSave,
-                    child: const Text("Save Skill"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrangeAccent,
+                    ),
+                    child: Text("Save Skill", style: TextStyle(color: Colors.white),),
                   ),
                 ],
               ),

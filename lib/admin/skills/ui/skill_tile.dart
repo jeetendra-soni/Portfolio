@@ -20,7 +20,7 @@ class SkillTile extends StatelessWidget {
     return Card(
       child: ListTile(
       leading: CircleAvatar(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
         child: ClipOval(
           child: skill.icon.isNotEmpty
               ? Image.memory(
@@ -40,7 +40,7 @@ class SkillTile extends StatelessWidget {
 
       title: Text(skill.name, style: const TextStyle(fontSize: 16)),
         subtitle: Text(
-          "${skill.experienceYears} Years\n${skill.category.label}",
+          "${skill.experienceYears} Years , ${skill.category.label}",
           style: const TextStyle(fontSize: 12),
         ),
         trailing: Row(

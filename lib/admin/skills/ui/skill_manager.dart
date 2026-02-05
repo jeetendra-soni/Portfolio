@@ -21,8 +21,11 @@ class SkillManager extends ConsumerWidget {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             const Spacer(),
             ElevatedButton.icon(
-              icon: const Icon(Icons.add),
-              label: const Text("Add Skill"),
+              icon: const Icon(Icons.add, color: Colors.white,),
+              label:  Text("Add Skill", style: TextStyle(color: Colors.white),),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepOrangeAccent,
+              ),
               onPressed: () => showDialog(
                 context: context,
                 builder: (_) => SkillDialog(

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/dashboard/admin_dashboard.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navigation_bar.dart';
 import 'configs/theme_config.dart';
 import 'firebase_options.dart';
@@ -31,7 +32,7 @@ class PortfolioApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Developer Portfolio',
       theme: getResponsiveTheme(context),
-      home: const PortfolioPage(),
+      home: const AdminDashboard(),
     );
   }
 }
