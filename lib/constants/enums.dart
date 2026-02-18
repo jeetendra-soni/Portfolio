@@ -30,3 +30,9 @@ extension SkillCategoryX on SkillCategory {
   }
 }
 
+enum ProjectStatus {
+  live,
+  inProgress,
+  completed,
+}
+

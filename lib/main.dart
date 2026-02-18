@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jeetendra_portfolio/admin/dashboard/admin_dashboard.dart';
+import 'package:jeetendra_portfolio/views/sections/project%20/view/project_screen.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navigation_bar.dart';
 import 'configs/theme_config.dart';
 import 'firebase_options.dart';
@@ -11,7 +11,6 @@ import 'views/sections/contact.dart';
 import 'views/sections/experience.dart';
 import 'views/sections/footer.dart';
 import 'views/sections/hero_section.dart';
-import 'views/sections/project.dart';
 import 'views/sections/skill.dart';
 
 void main() async {
@@ -32,7 +31,7 @@ class PortfolioApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Developer Portfolio',
       theme: getResponsiveTheme(context),
-      home: const AdminDashboard(),
+      home: const PortfolioPage(),
     );
   }
 }

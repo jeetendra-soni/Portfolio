@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jeetendra_portfolio/admin/experience/ui/exp_manager.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/ui/personal_info_page.dart';
+import 'package:jeetendra_portfolio/admin/projects/ui/project_manager.dart';
 import 'package:jeetendra_portfolio/admin/skills/ui/skill_manager.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
@@ -20,6 +21,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
     PersonalInfoPage(),
     SkillManager(),
     ExperienceManager(),
+    ProjectManager(),
 
   ];
 
@@ -95,6 +97,11 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
                   icon: Icons.work,
                   label: "Experience",
                   index: 2,
+                ),
+                _drawerItem(
+                  icon: Icons.apps,
+                  label: "Projects",
+                  index: 3,
                 ),
 
 

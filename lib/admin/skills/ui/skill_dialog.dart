@@ -295,28 +295,116 @@ class SkillDeleteDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      title: const Text("Delete Skill"),
-      content: Text(
-        'Are you sure you want to delete "$skillName"?\n\nThis action cannot be undone.',
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-      actions: [
-        TextButton(
-          child: const Text("Cancel"),
-          onPressed: () => Navigator.pop(context),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            /// 🔴 Warning Icon
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.delete_forever,
+                color: Colors.red,
+                size: 32,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            /// Title
+            const Text(
+              "Delete Project",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            /// Message
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade700,
+                ),
+                children: [
+                  const TextSpan(text: "Are you sure you want to delete skill "),
+                  TextSpan(
+                    text: '"$skillName"',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const TextSpan(
+                    text:
+                    "?\n\nThis action cannot be undone.",
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            /// Buttons
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 0),
+                    child: const Text("Cancel"),
+                  ),
+                ),
+
+                const SizedBox(width: 60),
+
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onConfirm();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 0),
+                    child: const Text(
+                      "Delete",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-          ),
-          child: const Text("Delete", style: TextStyle(color: Colors.white)),
-          onPressed: () {
-            Navigator.pop(context); // close dialog
-            onConfirm(); // delete action
-          },
-        ),
-      ],
+      ),
     );
   }
 }
