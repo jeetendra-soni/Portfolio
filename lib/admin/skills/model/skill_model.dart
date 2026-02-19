@@ -6,7 +6,7 @@ class SkillModel {
   final String id;
   final String name;
   final SkillLevel level;
-  final SkillCategory category;
+  final SkillCategoryType category;
   final int experienceYears;
   final String icon;
   final int order;
@@ -43,7 +43,7 @@ class SkillModel {
       id: doc.id,
       name: data['name'] ?? '',
       level: valueToLevel(data['level'] ?? 40),
-      category: SkillCategory.values.firstWhere((e) => e.name.toString() == data['category'], orElse: () => SkillCategory.devTools),
+      category: SkillCategoryType.values.firstWhere((e) => e.name.toString() == data['category'], orElse: () => SkillCategoryType.devTools),
       experienceYears: data['experienceYears'] ?? 0,
       icon: data['icon'] ?? 'default',
       order: data['order'] ?? 0,
@@ -69,7 +69,7 @@ class SkillModel {
     String? id,
     String? name,
     SkillLevel? level,
-    SkillCategory? category,
+    SkillCategoryType? category,
     int? experienceYears,
     String? icon,
     int? order,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeetendra_portfolio/utils/animated_container.dart';
 import 'package:jeetendra_portfolio/utils/utils.dart';
 
 class AboutSection extends StatelessWidget {
@@ -28,9 +29,18 @@ class _MobileAboutLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        CustomContainer(
+          color: Colors.white,
+          child: ClipRRect(
+            clipBehavior: Clip.antiAlias,
+            borderRadius: BorderRadius.circular(15),
+            child: Image.asset("assets/images/profile.jpeg", height: 400, width: 400, fit: BoxFit.fill,),
+          ),
+        ),
+        SizedBox(height: 40,),
         _AboutText(),
         SizedBox(height: 40),
         _AboutHighlights(),
@@ -44,17 +54,27 @@ class _DesktopAboutLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 6,
-          child: _AboutText(),
+          child: Column(
+            children: [
+              _AboutText(),
+              SizedBox(height: 20),
+              _AboutHighlights(),
+            ],
+          ),
         ),
         SizedBox(width: 50),
-        Expanded(
-          flex: 5,
-          child: _AboutHighlights(),
+        CustomContainer(
+          color: Colors.white,
+          child: ClipRRect(
+            clipBehavior: Clip.antiAlias,
+            borderRadius: BorderRadius.circular(15),
+            child: Image.asset("assets/images/profile.jpeg", height: 400, width: 400, fit: BoxFit.fill,),
+          ),
         ),
       ],
     );
@@ -108,7 +128,7 @@ class _AboutHighlights extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return const Row(
       children: [
         _HighlightCard(
           title: '3+',
@@ -141,8 +161,9 @@ class _HighlightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 28),
+      // width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
+      margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),

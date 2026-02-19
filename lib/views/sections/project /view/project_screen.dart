@@ -39,7 +39,7 @@ class ProjectsSection extends ConsumerWidget {
                 crossAxisCount: width < 700 ? 1 : width < 1100 ? 2: 3,
                 crossAxisSpacing: 32,
                 mainAxisSpacing: 32,
-                childAspectRatio: width < 700 ? .60 : width < 1100 ? .50 : 3.78,
+                childAspectRatio: width < 700 ? .60 : width < 1100 ? .50 : 0.60,
               ),
               itemBuilder: (context, index) {
                 return ProjectCard(project: projects[index]);

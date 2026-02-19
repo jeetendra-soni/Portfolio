@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jeetendra_portfolio/admin/projects/model/project_model.dart';
 
 class ProjectRepository {
@@ -39,11 +40,16 @@ class ProjectRepository {
 
   /// ---------------- ADD PROJECT ----------------
   Future<void> addProject(ProjectModel project) async {
-    await _collection.add({
-      ...project.toMap(),
-      "createdAt": FieldValue.serverTimestamp(),
-      "updatedAt": null,
-    });
+    try{
+      await _collection.add({
+        ...project.toMap(),
+        "createdAt": FieldValue.serverTimestamp(),
+        "updatedAt": FieldValue.serverTimestamp(),
+      });
+    }catch(e){
+      debugPrint("Failed to add project : $e");
+    }
+
   }
 
   /// ---------------- UPDATE PROJECT ----------------

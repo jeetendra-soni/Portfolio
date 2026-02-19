@@ -6,12 +6,12 @@ import 'package:jeetendra_portfolio/views/sections/project%20/view/project_scree
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navigation_bar.dart';
 import 'configs/theme_config.dart';
 import 'firebase_options.dart';
-import 'views/sections/about.dart';
-import 'views/sections/contact.dart';
-import 'views/sections/experience.dart';
-import 'views/sections/footer.dart';
-import 'views/sections/hero_section.dart';
-import 'views/sections/skill.dart';
+import 'views/sections/aboutus/about.dart';
+import 'views/sections/contact/contact.dart';
+import 'views/sections/experience/experience.dart';
+import 'views/sections/footer/footer.dart';
+import 'views/sections/hero/hero_section.dart';
+import 'views/sections/skills/skill_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,6 +82,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
           /// ---------- CONTENT ----------
           SliverToBoxAdapter(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SectionContainer(
                   key: homeKey,

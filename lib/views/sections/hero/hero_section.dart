@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jeetendra_portfolio/utils/url_launcher.dart';
 
-import '../../utils/animated_container.dart';
-import '../../utils/buttons/iconButton.dart';
+import '../../../utils/animated_container.dart';
+import '../../../utils/buttons/iconButton.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});

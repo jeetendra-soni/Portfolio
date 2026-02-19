@@ -2,29 +2,29 @@ enum AuthStatus { idle, loading, success, error }
 
 enum SkillLevel { beginner, intermediate, expert }
 
-enum SkillCategory { devTools, backendApis, architecture , stateManagement, language, frameWork, systemWork}
+enum SkillCategoryType { devTools, backendApis, architecture , stateManagement, language, frameWork, systemWork}
 
 
-extension SkillCategoryX on SkillCategory {
+extension SkillCategoryX on SkillCategoryType {
   String get value {
     return name; // Dart 2.15+
   }
 
   String get label {
     switch (this) {
-      case SkillCategory.devTools:
+      case SkillCategoryType.devTools:
         return "Dev Tools";
-      case SkillCategory.backendApis:
+      case SkillCategoryType.backendApis:
         return "Backend & APIs";
-      case SkillCategory.architecture:
+      case SkillCategoryType.architecture:
         return "Architecture";
-      case SkillCategory.stateManagement:
+      case SkillCategoryType.stateManagement:
         return "State Management";
-      case SkillCategory.language:
+      case SkillCategoryType.language:
         return "Language";
-      case SkillCategory.frameWork:
+      case SkillCategoryType.frameWork:
         return "Framework";
-      case SkillCategory.systemWork:
+      case SkillCategoryType.systemWork:
         return "System Work";
     }
   }
@@ -35,4 +35,3 @@ enum ProjectStatus {
   inProgress,
   completed,
 }
-

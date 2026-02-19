@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jeetendra_portfolio/admin/skills/repository/skill_repository.dart';
 import 'package:jeetendra_portfolio/constants/enums.dart';
 import '../model/skill_model.dart';
 
@@ -25,7 +26,7 @@ class _SkillDialogState extends State<SkillDialog> {
   late TextEditingController nameCtrl;
   late TextEditingController yearsCtrl;
   SkillLevel? selectedLevel;
-  SkillCategory? selectedCategory;
+  SkillCategoryType? selectedCategory;
   File? selectedIcon;
   Uint8List? selectedIconBytes;
   final ImagePicker _picker = ImagePicker();
@@ -124,7 +125,7 @@ class _SkillDialogState extends State<SkillDialog> {
               const SizedBox(height: 16),
               /// ---------- CATEGORY DROPDOWN ----------
 
-              DropdownButtonFormField<SkillCategory>(
+              DropdownButtonFormField<SkillCategoryType>(
                 value: selectedCategory,
                 decoration: const InputDecoration(
                   labelText: "Skill Category",
@@ -133,31 +134,31 @@ class _SkillDialogState extends State<SkillDialog> {
                 ),
                 items: const [
                   DropdownMenuItem(
-                    value: SkillCategory.language,
+                    value: SkillCategoryType.language,
                     child: Text("Language"),
                   ),
                   DropdownMenuItem(
-                    value: SkillCategory.devTools,
+                    value: SkillCategoryType.devTools,
                     child: Text("Dev Tools & CI/CD"),
                   ),
                   DropdownMenuItem(
-                    value: SkillCategory.architecture,
+                    value: SkillCategoryType.architecture,
                     child: Text("Architecture & Design Patterns"),
                   ),
                   DropdownMenuItem(
-                    value: SkillCategory.backendApis,
+                    value: SkillCategoryType.backendApis,
                     child: Text("Backend & APIs"),
                   ),
                   DropdownMenuItem(
-                    value: SkillCategory.stateManagement,
+                    value: SkillCategoryType.stateManagement,
                     child: Text("State Management"),
                   ),
                   DropdownMenuItem(
-                    value: SkillCategory.frameWork,
+                    value: SkillCategoryType.frameWork,
                     child: Text("Framework"),
                   ),
                   DropdownMenuItem(
-                    value: SkillCategory.systemWork,
+                    value: SkillCategoryType.systemWork,
                     child: Text("System Work"),
                   ),
                 ],
@@ -234,10 +235,19 @@ class _SkillDialogState extends State<SkillDialog> {
       source: ImageSource.gallery,
       imageQuality: 80,
     );
+
     if (image == null) return;
 
     if (kIsWeb) {
       final bytes = await image.readAsBytes();
+
+      debugPrint("Picked image bytes length: ${bytes.length}");
+
+      if (bytes.isEmpty) {
+        debugPrint("Image bytes are EMPTY ❌");
+        return;
+      }
+
       setState(() {
         selectedIconBytes = bytes;
         selectedIcon = null;
@@ -251,33 +261,45 @@ class _SkillDialogState extends State<SkillDialog> {
   }
 
 
-  void _onSave() {
+
+  Future<void> _onSave() async {
     if (nameCtrl.text.trim().isEmpty) return;
     if (selectedLevel == null || selectedCategory == null) return;
 
-    String iconBase64 = '';
+    final repo = SkillRepository();
 
-    if (kIsWeb && selectedIconBytes != null) {
-      iconBase64 = base64Encode(selectedIconBytes!);
-    } else if (!kIsWeb && selectedIcon != null) {
-      final bytes = selectedIcon!.readAsBytesSync();
-      iconBase64 = base64Encode(bytes);
-    }
+    String iconUrl = widget.skill?.icon ?? '';
 
-    widget.onSave(
-      SkillModel(
+    try {
+      /// 🔥 Upload icon if selected
+      if (kIsWeb && selectedIconBytes != null) {
+        iconUrl = await repo.uploadSkillIconWeb(selectedIconBytes!);
+      } else if (!kIsWeb && selectedIcon != null) {
+        iconUrl = await repo.uploadSkillIcon(File(selectedIcon!.path));
+      }
+
+      final skill = SkillModel(
         id: widget.skill?.id ?? '',
         name: nameCtrl.text.trim(),
         experienceYears: int.tryParse(yearsCtrl.text) ?? 1,
         level: selectedLevel!,
         category: selectedCategory!,
-        icon: iconBase64, // ✅ base64 stored
+        icon: iconUrl, // ✅ Save download URL
         order: 0,
-      ),
-    );
+      );
 
-    Navigator.pop(context);
+      if (widget.skill == null) {
+        await repo.addSkill(skill);
+      } else {
+        await repo.updateSkill(skill);
+      }
+
+      Navigator.pop(context);
+    } catch (e) {
+      debugPrint("Error saving skill: $e");
+    }
   }
+
 
 
 }
@@ -408,4 +430,3 @@ class SkillDeleteDialog extends StatelessWidget {
     );
   }
 }
-

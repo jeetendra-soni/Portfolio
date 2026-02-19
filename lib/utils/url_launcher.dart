@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,12 +30,17 @@ void urlLauncher({required String url}) async {
         return;
       }
 
-      if (Platform.isIOS || Platform.isAndroid) {
+      if (Platform.isIOS || Platform.isAndroid || kIsWeb) {
         await launchUrl(
           uri,
           mode: LaunchMode.platformDefault,
         );
-      } else {
+      } else if(kIsWeb) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.platformDefault,
+        );
+      }else{
         await launchUrl(
           uri,
           mode: LaunchMode.externalApplication,
