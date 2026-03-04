@@ -1,158 +1,229 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jeetendra_portfolio/admin/dashboard/admin_dashboard.dart';
-import 'package:jeetendra_portfolio/utils/url_launcher.dart';
-import 'package:jeetendra_portfolio/views/widgets/dialogs/contact_form.dart';
-import 'package:jeetendra_portfolio/views/widgets/dialogs/login_dialog.dart';
+import 'package:jeetendra_portfolio/configs/theme_config.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navbar_logo.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 
 class MyNavigationBar extends StatelessWidget {
-  const MyNavigationBar({super.key});
+  final VoidCallback? onContactTap;
+  final VoidCallback? onHomeTap;
+  final VoidCallback? onAboutTap;
+  final VoidCallback? onSkillsTap;
+  final VoidCallback? onProjectsTap;
+  final VoidCallback? onExperienceTap;
+  final VoidCallback? onTestimonialTap;
+  final VoidCallback? onMenuTap;
+
+  const MyNavigationBar({
+    super.key,
+    this.onContactTap,
+    this.onHomeTap,
+    this.onAboutTap,
+    this.onSkillsTap,
+    this.onProjectsTap,
+    this.onMenuTap,
+    this.onExperienceTap,
+    this.onTestimonialTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ScreenTypeLayout.builder(
-      mobile: (context) {
-        return const NavigationBarMobile();
-      },
-      tablet: (context) {
-        return const NavigationBarTabletDesktop();
-      },
-      desktop: (context) {
-        return const NavigationBarTabletDesktop();
-      },
-    );
-  }
-}
-
-class NavigationBarTabletDesktop extends ConsumerWidget {
-  const NavigationBarTabletDesktop({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      height: 100,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          const NavBarLogo(),
-          const SizedBox(width: 20),
-
-          Text(
-            "Er. Jeetendra Soni",
-            style: Theme.of(context).textTheme.headlineLarge,
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          height: 80,
+          decoration: BoxDecoration(
+            color: AppTheme.darkBackground.withOpacity(0.8),
+            border: const Border(
+              bottom: BorderSide(color: Colors.white10, width: 1),
+            ),
           ),
-
-          const Spacer(),
-
-          /// ---- CONTACT BUTTON ----
-          ElevatedButton.icon(
-            onPressed: () {
-              showAdaptiveDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => const ContactFormDialog(),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: LayoutBuilder(builder: (context, constraints) {
+            if (constraints.maxWidth < AppBreakpoints.tablet) {
+              return _MobileNav(
+                onContactTap: onContactTap,
+                onMenuTap: onMenuTap,
               );
-            },
-            icon: const Icon(Icons.mail_outline),
-            label: const Text("Contact Me"),
-            style: _buttonStyle,
-          ),
-
-          const SizedBox(width: 12),
-
-          // ---- AUTH ACTION ----
-          ElevatedButton(
-            onPressed: () {
-              showAdaptiveDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => const LoginDialog(),
-              );
-            },
-            style: _buttonStyle,
-            child: const Text("Login"),
-          )
-        ],
+            }
+            return _DesktopNav(
+              onHomeTap: onHomeTap,
+              onAboutTap: onAboutTap,
+              onSkillsTap: onSkillsTap,
+              onProjectsTap: onProjectsTap,
+              onContactTap: onContactTap,
+              onExperienceTap: onExperienceTap,
+              onTestimonialTap: onTestimonialTap,
+            );
+          }),
+        ),
       ),
     );
   }
-
-  ButtonStyle get _buttonStyle => ElevatedButton.styleFrom(
-        backgroundColor: Colors.orangeAccent,
-        foregroundColor: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-      );
 }
 
-class NavigationBarMobile extends StatelessWidget {
-  const NavigationBarMobile({super.key});
+class _DesktopNav extends StatelessWidget {
+  final VoidCallback? onContactTap;
+  final VoidCallback? onHomeTap;
+  final VoidCallback? onAboutTap;
+  final VoidCallback? onSkillsTap;
+  final VoidCallback? onProjectsTap;
+  final VoidCallback? onExperienceTap;
+  final VoidCallback? onTestimonialTap;
+
+  const _DesktopNav({
+    this.onContactTap,
+    this.onHomeTap,
+    this.onAboutTap,
+    this.onSkillsTap,
+    this.onProjectsTap,
+    this.onExperienceTap,
+    this.onTestimonialTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      color: Colors.white,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          const NavBarLogo(),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Er. Jeetendra Soni",
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(width: 10),
-
-                /// ---- CONTACT BUTTON ----
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: IconButton(
-                    onPressed: () {
-                      openPhoneDialer(context: context, phoneNumber: "+917509005537");
-                    },
-                    icon: const Icon(Icons.call),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orangeAccent,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: IconButton(
-                    onPressed: () {
-                      showAdaptiveDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return const ContactFormDialog();
-                          });
-                    },
-                    icon: const Icon(Icons.mail_outline),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orangeAccent,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+    return Row(
+      children: [
+        const NavBarLogo(),
+        const SizedBox(width: 12),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "JEETENDRA SONI",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 18,
+                letterSpacing: 1.2,
+                fontFamily: 'Inter',
+              ),
             ),
-          )
-        ],
+            Text(
+              "Flutter Developer",
+              style: TextStyle(
+                color: AppTheme.secondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        const Spacer(),
+        _NavLink(title: "Home", onTap: onHomeTap),
+        _NavLink(title: "About", onTap: onAboutTap),
+        _NavLink(title: "Experience", onTap: onExperienceTap),
+        _NavLink(title: "Skills", onTap: onSkillsTap),
+        _NavLink(title: "Projects", onTap: onProjectsTap),
+        _NavLink(title: "Testimonials", onTap: onTestimonialTap),
+        const SizedBox(width: 24),
+        ElevatedButton(
+          onPressed: onContactTap,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.primary,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: const Text("Contact Me"),
+        ),
+      ],
+    );
+  }
+}
+
+class _MobileNav extends StatelessWidget {
+  final VoidCallback? onContactTap;
+  final VoidCallback? onMenuTap;
+  const _MobileNav({this.onContactTap, this.onMenuTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "JEETENDRA SONI",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 18,
+                letterSpacing: 1.2,
+                fontFamily: 'Inter',
+              ),
+            ),
+            Text(
+              "Flutter Developer",
+              style: TextStyle(
+                color: AppTheme.secondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        const Spacer(),
+        IconButton(
+          onPressed: onContactTap,
+          icon: const Icon(Icons.mail_outline, color: Colors.white),
+          style: IconButton.styleFrom(
+            backgroundColor: AppTheme.darkBackground.withOpacity(0.2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        IconButton(
+          onPressed: onMenuTap,
+          icon: const Icon(Icons.menu, color: Colors.white),
+        ),
+      ],
+    );
+  }
+}
+
+class _NavLink extends StatefulWidget {
+  final String title;
+  final VoidCallback? onTap;
+  const _NavLink({required this.title, this.onTap});
+
+  @override
+  State<_NavLink> createState() => _NavLinkState();
+}
+
+class _NavLinkState extends State<_NavLink> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 200),
+            style: TextStyle(
+              color: _isHovered ? AppTheme.primary : Colors.white70,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+            child: Text(widget.title),
+          ),
+        ),
       ),
     );
   }

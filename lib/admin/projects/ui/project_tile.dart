@@ -32,9 +32,9 @@ class ProjectTile extends StatelessWidget {
             /// ---------------- BANNER IMAGE ----------------
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: project.bannerImage.isNotEmpty
-                  ? Image.memory(
-                base64Decode(project.bannerImage),
+              child: project.icon.isNotEmpty
+                  ? Image.network(
+                project.icon,
                 width: 110,
                 height: 110,
                 fit: BoxFit.cover,

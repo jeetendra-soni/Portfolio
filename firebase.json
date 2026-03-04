@@ -29,7 +29,8 @@
     }
   },
   "hosting": {
-    "public": "build/web",
+    "site": "jeetendrasoni",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",

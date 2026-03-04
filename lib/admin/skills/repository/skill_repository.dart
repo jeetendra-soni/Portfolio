@@ -7,7 +7,6 @@ import 'package:uuid/uuid.dart';
 
 class SkillRepository {
 
-  final _firestore = FirebaseFirestore.instance;
   final _storage = FirebaseStorage.instance;
 
   final _ref = FirebaseFirestore.instance
@@ -40,9 +39,7 @@ class SkillRepository {
 
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
 
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('skill_icons/$fileName.jpg');
+    final ref = FirebaseStorage.instance.ref().child('skill_icons/$fileName.jpg');
 
     await ref.putData(
       bytes,

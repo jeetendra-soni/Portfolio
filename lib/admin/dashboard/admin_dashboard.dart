@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/award_achievement/ui/award_manager.dart';
 import 'package:jeetendra_portfolio/admin/experience/ui/exp_manager.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/ui/personal_info_page.dart';
 import 'package:jeetendra_portfolio/admin/projects/ui/project_manager.dart';
@@ -22,7 +23,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
     SkillManager(),
     ExperienceManager(),
     ProjectManager(),
-
+    AwardManager(),
   ];
 
 
@@ -103,6 +104,11 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
                   label: "Projects",
                   index: 3,
                 ),
+                _drawerItem(
+                  icon: Icons.sunny_snowing,
+                  label: "Awards & Achievements",
+                  index: 4,
+                ),
 
 
                 const Spacer(),
@@ -166,5 +172,3 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
   }
 
 }
-
-

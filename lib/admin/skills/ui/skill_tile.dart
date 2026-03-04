@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jeetendra_portfolio/constants/enums.dart';
 import '../model/skill_model.dart';
@@ -23,8 +24,8 @@ class SkillTile extends StatelessWidget {
       backgroundColor: Colors.white,
         child: ClipOval(
           child: skill.icon.isNotEmpty
-              ? Image.memory(
-            base64Decode(skill.icon),
+              ? CachedNetworkImage(
+            imageUrl: skill.icon,
             width: 40,
             height: 40,
             fit: BoxFit.cover,

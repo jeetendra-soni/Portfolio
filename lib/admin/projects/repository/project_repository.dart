@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jeetendra_portfolio/admin/projects/model/project_model.dart';
@@ -5,6 +8,22 @@ import 'package:jeetendra_portfolio/admin/projects/model/project_model.dart';
 class ProjectRepository {
   final CollectionReference<Map<String, dynamic>> _collection =
   FirebaseFirestore.instance.collection('projects');
+  final _storage = FirebaseStorage.instance;
+
+  Future<String?> uploadToFirebase(
+      Uint8List bytes,
+      String folder,
+      ) async {
+    final fileName =
+        "${DateTime.now().millisecondsSinceEpoch}.png";
+
+    final ref = _storage
+        .ref()
+        .child("projects/$folder/$fileName");
+
+    final uploadTask = await ref.putData(bytes);
+    return await uploadTask.ref.getDownloadURL();
+  }
 
   /// ---------------- GET PROJECTS ----------------
   Stream<List<ProjectModel>> getProjects() {

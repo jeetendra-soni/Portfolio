@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:jeetendra_portfolio/constants/color_const.dart';
 
 class SkillCard extends StatefulWidget {
   final String title;
@@ -31,9 +33,9 @@ class _SkillCardState extends State<SkillCard> {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              // color: widget.bl.withOpacity(.25),
-              blurRadius: _hovered ? 30 : 16,
-              offset: const Offset(0, 10),
+              color: AppColor.randomShadowColor(),
+              blurRadius: _hovered ? 10 : 3,
+              offset:  Offset(_hovered ?4: 2, _hovered ? 4: 2, ),
             ),
           ],
         ),
@@ -50,8 +52,8 @@ class _SkillCardState extends State<SkillCard> {
                 shape: BoxShape.circle,
                 // color: widget.color.withOpacity(.1),
               ),
-              child: Image.network(
-                widget.icon,
+              child: CachedNetworkImage(
+                imageUrl: widget.icon,
               ),
             ),
             const SizedBox(width: 10),

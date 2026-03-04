@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jeetendra_portfolio/admin/projects/model/project_model.dart';
 import 'package:jeetendra_portfolio/constants/assets_const.dart';
+import 'package:jeetendra_portfolio/constants/color_const.dart';
 import 'package:jeetendra_portfolio/utils/url_launcher.dart';
 
 class ProjectCard extends StatefulWidget {
@@ -31,7 +32,7 @@ class _ProjectCardState extends State<ProjectCard> {
           color: const Color(0xfff5f6f8),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.white),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(.25), blurRadius: hovered ? 40 : 25, offset: const Offset(0, 25))],
+          boxShadow: [BoxShadow(color: hovered ? AppColor.randomShadowColor(): Colors.black.withOpacity(.25), blurRadius: hovered ? 20 : 10, offset: const Offset(0, 15))],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
@@ -48,7 +49,7 @@ class _ProjectCardState extends State<ProjectCard> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.white),
                 ),
-                child: project.bannerImage.isNotEmpty ? Image.memory(base64Decode(project.bannerImage), fit: BoxFit.fill) : Container(color: Colors.grey.shade200, child: const Icon(Icons.image, size: 32)),
+                child: project.bannerImage.isNotEmpty ? Image.network(project.bannerImage, fit: BoxFit.fill) : Container(color: Colors.grey.shade200, child: const Icon(Icons.image, size: 32)),
               ),
               ListTile(
                 leading: Container(
@@ -60,18 +61,18 @@ class _ProjectCardState extends State<ProjectCard> {
                     borderRadius: BorderRadius.circular(10),
                   ),
 
-                  child: Image.memory(base64Decode(project.icon)),
+                  child: Image.network(project.icon),
                 ),
                 title: Text(project.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Row(
                   children: [
                     Text("Live on : ", style: const TextStyle(fontSize: 12)),
-                    const SizedBox(width: 14),
-                    Image.asset(AssetsConst.webSite, height: 15, width: 15,),
-                    const SizedBox(width: 14),
-                    Image.asset(AssetsConst.androidIcon, height: 15, width: 15,),
-                    const SizedBox(width: 14),
-                    Image.asset(AssetsConst.appleIcon, height: 15, width: 15,),
+                    if(project.liveUrl.isNotEmpty)const SizedBox(width: 14),
+                    if(project.liveUrl.isNotEmpty)Image.asset(AssetsConst.webSite, height: 15, width: 15,),
+                    if(project.playStoreUrl.isNotEmpty)const SizedBox(width: 14),
+                    if(project.playStoreUrl.isNotEmpty)Image.asset(AssetsConst.androidIcon, height: 15, width: 15,),
+                    if(project.appStoreUrl.isNotEmpty)const SizedBox(width: 14),
+                    if(project.appStoreUrl.isNotEmpty)Image.asset(AssetsConst.appleIcon, height: 15, width: 15,),
                   ],
                 ),
               ),

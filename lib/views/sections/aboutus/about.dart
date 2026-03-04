@@ -9,15 +9,21 @@ class AboutSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 700;
+        final isMobile = constraints.maxWidth < 900;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SectionTitle(title: 'About Me'),
-            const SizedBox(height: 40),
-            isMobile ? const _MobileAboutLayout() : const _DesktopAboutLayout(),
-          ],
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: isMobile ? 40 : 80,
+            horizontal: isMobile ? 20 : 40,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SectionTitle(title: 'About Me'),
+              const SizedBox(height: 60),
+              isMobile ? const _MobileAboutLayout() : const _DesktopAboutLayout(),
+            ],
+          ),
         );
       },
     );
@@ -32,18 +38,11 @@ class _MobileAboutLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CustomContainer(
-          color: Colors.white,
-          child: ClipRRect(
-            clipBehavior: Clip.antiAlias,
-            borderRadius: BorderRadius.circular(15),
-            child: Image.asset("assets/images/profile.jpeg", height: 400, width: 400, fit: BoxFit.fill,),
-          ),
-        ),
-        SizedBox(height: 40,),
-        _AboutText(),
-        SizedBox(height: 40),
-        _AboutHighlights(),
+        const _AboutImage(isMobile: true),
+        const SizedBox(height: 60),
+        const _AboutText(),
+        const SizedBox(height: 40),
+        const _AboutHighlights(isMobile: true),
       ],
     );
   }
@@ -55,28 +54,89 @@ class _DesktopAboutLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
+        const Expanded(
           flex: 6,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _AboutText(),
-              SizedBox(height: 20),
-              _AboutHighlights(),
+              SizedBox(height: 40),
+              _AboutHighlights(isMobile: false),
             ],
           ),
         ),
-        SizedBox(width: 50),
-        CustomContainer(
-          color: Colors.white,
-          child: ClipRRect(
-            clipBehavior: Clip.antiAlias,
-            borderRadius: BorderRadius.circular(15),
-            child: Image.asset("assets/images/profile.jpeg", height: 400, width: 400, fit: BoxFit.fill,),
-          ),
+        const SizedBox(width: 80),
+        const Expanded(
+          flex: 4,
+          child: _AboutImage(isMobile: false),
         ),
       ],
+    );
+  }
+}
+
+class _AboutImage extends StatelessWidget {
+  final bool isMobile;
+  const _AboutImage({required this.isMobile});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Decorative background element
+          Container(
+            width: isMobile ? 260 : 380,
+            height: isMobile ? 260 : 380,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.blue.withOpacity(0.2), width: 2),
+            ),
+          ),
+          Transform.rotate(
+            angle: 0.1,
+            child: Container(
+              width: isMobile ? 260 : 380,
+              height: isMobile ? 260 : 380,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.blue.withOpacity(0.05),
+              ),
+            ),
+          ),
+          CustomContainer(
+            color: Colors.transparent,
+            child: Container(
+              width: isMobile ? 250 : 360,
+              height: isMobile ? 250 : 360,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  "assets/images/profile.jpeg",
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.person, size: 100, color: Colors.grey),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -86,36 +146,33 @@ class _AboutText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'I am a Senior Flutter Developer specializing in building scalable, '
-          'high-performance mobile and web applications using Flutter.',
+          'Bridging the gap between design and high-performance engineering.',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue[900],
+                height: 1.3,
+              ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'I am a Senior Flutter Developer with 3+ years of experience dedicated to crafting exceptional mobile and web experiences. My journey is defined by a passion for clean architecture, seamless animations, and building products that actually solve user problems.',
           style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            height: 1.6,
+            fontSize: 16,
+            height: 1.8,
+            color: Colors.grey[800],
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 16),
         Text(
-          'With over 3+ years of professional experience, I have delivered '
-          'production-ready applications across domains like ride-hailing, '
-          'e-commerce, and healthcare. I focus on clean architecture, '
-          'performance optimization, and maintainable codebases.',
+          'Specializing in building scalable, production-ready applications, I have worked across e-commerce, healthcare, and fintech domains, always pushing the boundaries of what is possible with Flutter.',
           style: TextStyle(
-            height: 1.7,
-            color: Colors.black87,
-          ),
-        ),
-        SizedBox(height: 20),
-        Text(
-          'I enjoy collaborating with designers, backend engineers, and '
-          'product teams to build solutions that solve real-world problems.',
-          style: TextStyle(
-            height: 1.7,
-            color: Colors.black87,
+            fontSize: 16,
+            height: 1.8,
+            color: Colors.grey[800],
           ),
         ),
       ],
@@ -124,75 +181,108 @@ class _AboutText extends StatelessWidget {
 }
 
 class _AboutHighlights extends StatelessWidget {
-  const _AboutHighlights();
+  final bool isMobile;
+  const _AboutHighlights({required this.isMobile});
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
+    return Wrap(
+      spacing: 24,
+      runSpacing: 24,
+      alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+      children: const [
         _HighlightCard(
           title: '3+',
-          subtitle: 'Years Experience',
+          subtitle: 'Years of\nExperience',
+          icon: Icons.timer_outlined,
+          color: Colors.blue,
         ),
-        SizedBox(height: 24),
         _HighlightCard(
           title: '15+',
-          subtitle: 'Projects Delivered',
+          subtitle: 'Projects\nDelivered',
+          icon: Icons.rocket_launch_outlined,
+          color: Colors.purple,
         ),
-        SizedBox(height: 24),
         _HighlightCard(
           title: '10+',
-          subtitle: 'Happy Clients',
+          subtitle: 'Global\nClients',
+          icon: Icons.public_outlined,
+          color: Colors.orange,
         ),
       ],
     );
   }
 }
 
-class _HighlightCard extends StatelessWidget {
+class _HighlightCard extends StatefulWidget {
   final String title;
   final String subtitle;
+  final IconData icon;
+  final Color color;
 
   const _HighlightCard({
     required this.title,
     required this.subtitle,
+    required this.icon,
+    required this.color,
   });
 
   @override
+  State<_HighlightCard> createState() => _HighlightCardState();
+}
+
+class _HighlightCardState extends State<_HighlightCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      // width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
-      margin: const EdgeInsets.only(right: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 16,
-            offset: Offset(0, 8),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        width: 160,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: _hovered ? widget.color.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
+            width: 2,
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue,
+          boxShadow: [
+            BoxShadow(
+              color: _hovered ? widget.color.withOpacity(0.1) : Colors.black.withOpacity(0.02),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(widget.icon, color: widget.color, size: 32),
+            const SizedBox(height: 16),
+            Text(
+              widget.title,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: widget.color,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              widget.subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[600],
+                height: 1.2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

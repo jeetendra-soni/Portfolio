@@ -3,6 +3,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jeetendra_portfolio/admin/projects/model/project_model.dart';
+import 'package:jeetendra_portfolio/admin/projects/repository/project_repository.dart';
+import 'package:jeetendra_portfolio/admin/skills/repository/skill_repository.dart';
+import 'package:jeetendra_portfolio/constants/enums.dart';
+
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:jeetendra_portfolio/admin/projects/model/project_model.dart';
+import 'package:jeetendra_portfolio/admin/projects/repository/project_repository.dart';
 import 'package:jeetendra_portfolio/constants/enums.dart';
 
 class ProjectDialog extends StatefulWidget {
@@ -31,15 +44,17 @@ class _ProjectDialogState extends State<ProjectDialog> {
 
   ProjectStatus? selectedStatus;
   bool isFeatured = false;
+  bool isSaving = false;
 
-  Uint8List? iconBytes;
-  Uint8List? bannerBytes;
-  List<String> galleryBase64 = [];
+  Uint8List? selectedBannerBytes;
+  Uint8List? selectedIconBytes;
 
   final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
+    super.initState();
+
     final p = widget.project;
 
     titleCtrl = TextEditingController(text: p?.title ?? '');
@@ -48,29 +63,33 @@ class _ProjectDialogState extends State<ProjectDialog> {
     liveCtrl = TextEditingController(text: p?.liveUrl ?? '');
     playStoreCtrl = TextEditingController(text: p?.playStoreUrl ?? '');
     appStoreCtrl = TextEditingController(text: p?.appStoreUrl ?? '');
-    techCtrl = TextEditingController(text: p?.technologies.join(", ") ?? '');
-    featureCtrl = TextEditingController(text: p?.features.join(", ") ?? '');
+    techCtrl =
+        TextEditingController(text: p?.technologies.join(", ") ?? '');
+    featureCtrl =
+        TextEditingController(text: p?.features.join(", ") ?? '');
 
     selectedStatus = p?.status ?? ProjectStatus.inProgress;
     isFeatured = p?.featured ?? false;
+  }
 
-    if (p?.icon.isNotEmpty == true) {
-      iconBytes = base64Decode(p!.icon);
-    }
-    if (p?.bannerImage.isNotEmpty == true) {
-      bannerBytes = base64Decode(p!.bannerImage);
-    }
-
-    galleryBase64 = p?.galleryImages ?? [];
-
-    super.initState();
+  @override
+  void dispose() {
+    titleCtrl.dispose();
+    descCtrl.dispose();
+    githubCtrl.dispose();
+    liveCtrl.dispose();
+    playStoreCtrl.dispose();
+    appStoreCtrl.dispose();
+    techCtrl.dispose();
+    featureCtrl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
+        constraints: const BoxConstraints(maxWidth: 650),
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: SingleChildScrollView(
@@ -79,15 +98,19 @@ class _ProjectDialogState extends State<ProjectDialog> {
               children: [
 
                 Text(
-                  widget.project == null ? "Add Project" : "Edit Project",
+                  widget.project == null
+                      ? "Add Project"
+                      : "Edit Project",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
                 _buildTextField(titleCtrl, "Project Title", Icons.work),
                 const SizedBox(height: 16),
 
-                _buildTextField(descCtrl, "Description", Icons.description, maxLines: 3),
+                _buildTextField(descCtrl, "Description",
+                    Icons.description,
+                    maxLines: 3),
                 const SizedBox(height: 16),
 
                 _buildTextField(githubCtrl, "GitHub URL", Icons.code),
@@ -106,10 +129,8 @@ class _ProjectDialogState extends State<ProjectDialog> {
                 const SizedBox(height: 16),
 
                 _buildTextField(featureCtrl, "Features (comma separated)", Icons.star),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
-
-                /// STATUS
                 DropdownButtonFormField<ProjectStatus>(
                   value: selectedStatus,
                   decoration: const InputDecoration(
@@ -117,66 +138,66 @@ class _ProjectDialogState extends State<ProjectDialog> {
                     border: OutlineInputBorder(),
                   ),
                   items: ProjectStatus.values
-                      .map(
-                        (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e.name),
-                    ),
-                  )
+                      .map((e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e.name),
+                  ))
                       .toList(),
-                  onChanged: (v) => setState(() => selectedStatus = v!),
+                  onChanged: (v) =>
+                      setState(() => selectedStatus = v!),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
 
-                /// FEATURED SWITCH
                 SwitchListTile(
                   value: isFeatured,
                   title: const Text("Mark as Featured"),
-                  onChanged: (v) => setState(() => isFeatured = v),
+                  onChanged: (v) =>
+                      setState(() => isFeatured = v),
                 ),
 
                 const SizedBox(height: 20),
 
-                /// BANNER IMAGE
+                /// Banner
                 const Text("Banner Image"),
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: _pickBanner,
                   child: Container(
-                    height: 250,
+                    height: 220,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                     ),
-                    child: bannerBytes == null
+                    child: selectedBannerBytes == null
                         ? const Icon(Icons.add_photo_alternate)
-                        : Image.memory(bannerBytes!, fit: BoxFit.cover),
+                        : Image.memory(
+                      selectedBannerBytes!,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                /// GALLERY
-                const Text("Gallery Images"),
+                /// App Icon
+                const Text("App Icon"),
                 const SizedBox(height: 8),
-
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    ...galleryBase64.map(
-                          (img) => Image.memory(
-                        base64Decode(img),
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                      ),
+                GestureDetector(
+                  onTap: _pickIcon,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.add_photo_alternate),
-                      onPressed: _pickGalleryImage,
-                    )
-                  ],
+                    child: selectedIconBytes == null
+                        ? const Icon(Icons.add_photo_alternate)
+                        : Image.memory(
+                      selectedIconBytes!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
 
                 const SizedBox(height: 30),
@@ -185,16 +206,23 @@ class _ProjectDialogState extends State<ProjectDialog> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () =>
+                          Navigator.pop(context),
                       child: const Text("Cancel"),
                     ),
                     const SizedBox(width: 12),
                     ElevatedButton(
-                      onPressed: _onSave,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepOrangeAccent,
-                      ),
-                      child: const Text("Save Project",style: TextStyle(color: Colors.white),),
+                      onPressed:
+                      isSaving ? null : _onSave,
+                      child: isSaving
+                          ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child:
+                        CircularProgressIndicator(
+                            strokeWidth: 2),
+                      )
+                          : const Text("Save Project"),
                     )
                   ],
                 )
@@ -209,9 +237,8 @@ class _ProjectDialogState extends State<ProjectDialog> {
   Widget _buildTextField(
       TextEditingController ctrl,
       String label,
-      IconData icon, {
-        int maxLines = 1,
-      }) {
+      IconData icon,
+      {int maxLines = 1}) {
     return TextField(
       controller: ctrl,
       maxLines: maxLines,
@@ -226,24 +253,44 @@ class _ProjectDialogState extends State<ProjectDialog> {
   Future<void> _pickBanner() async {
     final image = await _picker.pickImage(source: ImageSource.gallery);
     if (image == null) return;
+
     final bytes = await image.readAsBytes();
-    setState(() => bannerBytes = bytes);
+    setState(() => selectedBannerBytes = bytes);
   }
 
-  Future<void> _pickGalleryImage() async {
+  Future<void> _pickIcon() async {
     final image = await _picker.pickImage(source: ImageSource.gallery);
     if (image == null) return;
+
     final bytes = await image.readAsBytes();
-    setState(() {
-      galleryBase64.add(base64Encode(bytes));
-    });
+    setState(() => selectedIconBytes = bytes);
   }
 
-  void _onSave() {
+  Future<void> _onSave() async {
+    final repo = ProjectRepository();
     if (titleCtrl.text.trim().isEmpty) return;
 
-    widget.onSave(
-      ProjectModel(
+    setState(() => isSaving = true);
+
+    try {
+      String bannerUrl =
+          widget.project?.bannerImage ?? '';
+      String iconUrl =
+          widget.project?.icon ?? '';
+
+      if (selectedBannerBytes != null) {
+        bannerUrl = await repo.uploadToFirebase(
+            selectedBannerBytes!, "banners") ??
+            '';
+      }
+
+      if (selectedIconBytes != null) {
+        iconUrl = await repo.uploadToFirebase(
+            selectedIconBytes!, "icons") ??
+            '';
+      }
+
+      final project = ProjectModel(
         id: widget.project?.id ?? '',
         title: titleCtrl.text.trim(),
         description: descCtrl.text.trim(),
@@ -251,22 +298,40 @@ class _ProjectDialogState extends State<ProjectDialog> {
         liveUrl: liveCtrl.text.trim(),
         playStoreUrl: playStoreCtrl.text.trim(),
         appStoreUrl: appStoreCtrl.text.trim(),
-        technologies: techCtrl.text.split(',').map((e) => e.trim()).toList(),
-        features: featureCtrl.text.split(',').map((e) => e.trim()).toList(),
-        icon: bannerBytes != null ? base64Encode(bannerBytes!) : '',
-        bannerImage: bannerBytes != null ? base64Encode(bannerBytes!) : '',
-        galleryImages: galleryBase64,
+        technologies: techCtrl.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList(),
+        features: featureCtrl.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList(),
+        icon: iconUrl,
+        bannerImage: bannerUrl,
+        galleryImages: [],
         status: selectedStatus!,
         featured: isFeatured,
-        createdAt: widget.project?.createdAt ?? DateTime.now(),
-        updatedAt: DateTime.now(), tagline: '', contribution: '', playStoreQr: '', appStoreQr: '',
-      ),
-    );
+        createdAt:
+        widget.project?.createdAt ??
+            DateTime.now(),
+        updatedAt: DateTime.now(),
+        tagline: '',
+        contribution: '',
+        playStoreQr: '',
+        appStoreQr: '',
+      );
 
-    Navigator.pop(context);
+      widget.onSave(project);
+      Navigator.pop(context);
+    } catch (e) {
+      debugPrint("Save Error: $e");
+    }
+
+    setState(() => isSaving = false);
   }
 }
-
 
 
 
@@ -396,4 +461,3 @@ class ProjectDeleteDialog extends StatelessWidget {
     );
   }
 }
-

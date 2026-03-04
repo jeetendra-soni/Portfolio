@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:jeetendra_portfolio/views/widgets/social_links.dart';
 
 class ProfessionalFooter extends StatelessWidget {
   const ProfessionalFooter({super.key});
@@ -24,7 +24,7 @@ class ProfessionalFooter extends StatelessWidget {
                     const SizedBox(height: 20),
                     _buildQuickLinks(),
                     const SizedBox(height: 20),
-                    _buildContactInfo(),
+                    _buildContactInfo(isMobile),
                   ],
                 )
               : Row(
@@ -33,7 +33,7 @@ class ProfessionalFooter extends StatelessWidget {
                   children: [
                     _buildBrandLogo(),
                     _buildQuickLinks(),
-                    _buildContactInfo(),
+                    _buildContactInfo(isMobile),
                   ],
                 ),
           const SizedBox(height: 30),
@@ -92,7 +92,7 @@ class ProfessionalFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildContactInfo() {
+  Widget _buildContactInfo(bool isMobile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -105,30 +105,8 @@ class ProfessionalFooter extends StatelessWidget {
         const SizedBox(height: 4),
         const Text("Phone: +91 9876543210", style: TextStyle(color: Colors.white70)),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            _socialIcon("https://facebook.com", Icons.facebook),
-            const SizedBox(width: 10),
-            _socialIcon("https://twitter.com", Icons.wb_twilight),
-            const SizedBox(width: 10),
-            _socialIcon("https://linkedin.com", Icons.info),
-          ],
-        )
+        SocialLinks(isMobile: isMobile)
       ],
-    );
-  }
-
-  Widget _socialIcon(String url, IconData icon) {
-    return InkWell(
-      onTap: () => launchUrl(Uri.parse(url)),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white10,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: Colors.white, size: 20),
-      ),
     );
   }
 }
