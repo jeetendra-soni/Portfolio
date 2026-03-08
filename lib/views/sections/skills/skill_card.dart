@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:jeetendra_portfolio/configs/app_fonts.dart';
 import 'package:jeetendra_portfolio/constants/color_const.dart';
 
 class SkillCard extends StatefulWidget {
@@ -60,9 +62,11 @@ class _SkillCardState extends State<SkillCard> {
             Text(
               widget.title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontFamily: AppFonts.josefinSansFamily,
               ),
               maxLines: 2,
               // overflow: TextOverflow.ellipsis,

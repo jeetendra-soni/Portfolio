@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:jeetendra_portfolio/configs/app_fonts.dart';
 import 'package:jeetendra_portfolio/utils/animated_container.dart';
 import 'package:jeetendra_portfolio/utils/utils.dart';
 
@@ -147,8 +149,9 @@ class _AboutText extends StatelessWidget {
           'Bridging the gap between design and high-performance engineering.',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.blue[900],
+                color: Colors.orange,
                 height: 1.3,
+            fontFamily: AppFonts.josefinSansFamily,
               ),
         ),
         const SizedBox(height: 24),
@@ -157,7 +160,9 @@ class _AboutText extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             height: 1.8,
-            color: Colors.grey[800],
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontFamily: AppFonts.josefinSansFamily
           ),
         ),
         const SizedBox(height: 16),
@@ -166,7 +171,9 @@ class _AboutText extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             height: 1.8,
-            color: Colors.grey[800],
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            fontFamily: AppFonts.josefinSansFamily
           ),
         ),
       ],
@@ -262,6 +269,7 @@ class _HighlightCardState extends State<_HighlightCard> {
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: widget.color,
+                fontFamily: AppFonts.rowdiesFamily
               ),
             ),
             const SizedBox(height: 4),
@@ -271,8 +279,9 @@ class _HighlightCardState extends State<_HighlightCard> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
+                color: Colors.black,
                 height: 1.2,
+                fontFamily: AppFonts.crimsonProFamily
               ),
             ),
           ],

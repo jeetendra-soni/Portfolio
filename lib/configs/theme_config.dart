@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:jeetendra_portfolio/configs/app_fonts.dart';
 
 /// AppTheme manages the visual identity of the application.
-/// It uses Material 3, ColorScheme.fromSeed, and Google Fonts
+/// It uses Material 3, ColorScheme.fromSeed, and local fonts
 /// to ensure a premium, modern, and professional UI.
 class AppTheme {
   static const Color primary = Colors.orangeAccent;
-  static const Color secondary = Color(0xFF00ACC1);
-
   // Brand Colors
   static const Color primaryBlue = Color(0xFF1E88E5);
   static const Color secondaryCyan = Color(0xFF00ACC1);
@@ -39,8 +37,8 @@ class AppTheme {
       scaffoldBackgroundColor: colorScheme.background,
 
       // --- Font Configuration ---
-      // We use 'Inter' for a clean, modern tech feel.
-      textTheme: _buildTextTheme(colorScheme, screenWidth),
+      // We use local 'Inter' font via AppFonts.
+      textTheme: AppFonts.interTextTheme(colorScheme),
 
       // --- AppBar Theme ---
       appBarTheme: AppBarTheme(
@@ -48,7 +46,7 @@ class AppTheme {
         backgroundColor: isDark ? darkBackground.withOpacity(0.8) : Colors.white.withOpacity(0.8),
         elevation: 0,
         scrolledUnderElevation: 0,
-        titleTextStyle: GoogleFonts.inter(
+        titleTextStyle: AppFonts.inter(
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: colorScheme.onBackground,
@@ -76,7 +74,7 @@ class AppTheme {
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          textStyle: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16),
+          textStyle: AppFonts.inter(fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),
       
@@ -85,7 +83,7 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           side: BorderSide(color: colorScheme.primary),
-          textStyle: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16),
+          textStyle: AppFonts.inter(fontWeight: FontWeight.w600, fontSize: 16),
         ),
       ),
 
@@ -101,7 +99,7 @@ class AppTheme {
         filled: true,
         fillColor: isDark ? Colors.black26 : Colors.grey.withOpacity(0.05),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        labelStyle: GoogleFonts.inter(color: colorScheme.onSurface.withOpacity(0.6)),
+        labelStyle: AppFonts.inter(color: colorScheme.onSurface.withOpacity(0.6)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -126,57 +124,6 @@ class AppTheme {
             bottomRight: Radius.circular(24),
           ),
         ),
-      ),
-    );
-  }
-
-  static TextTheme _buildTextTheme(ColorScheme colorScheme, double width) {
-    final bool isLargeScreen = width > 1024;
-    
-    // We use GoogleFonts.interTextTheme as base and customize weights/sizes
-    final baseTheme = GoogleFonts.interTextTheme();
-
-    return baseTheme.copyWith(
-      displayLarge: GoogleFonts.inter(
-        fontSize: isLargeScreen ? 64 : 48,
-        fontWeight: FontWeight.w900,
-        color: colorScheme.onBackground,
-        letterSpacing: -1.5,
-      ),
-      displayMedium: GoogleFonts.inter(
-        fontSize: isLargeScreen ? 52 : 38,
-        fontWeight: FontWeight.w800,
-        color: colorScheme.onBackground,
-      ),
-      headlineLarge: GoogleFonts.inter(
-        fontSize: isLargeScreen ? 40 : 32,
-        fontWeight: FontWeight.bold,
-        color: colorScheme.onBackground,
-      ),
-      headlineMedium: GoogleFonts.inter(
-        fontSize: isLargeScreen ? 32 : 26,
-        fontWeight: FontWeight.bold,
-        color: colorScheme.onBackground,
-      ),
-      titleLarge: GoogleFonts.inter(
-        fontSize: 22,
-        fontWeight: FontWeight.w700,
-        color: colorScheme.onBackground,
-      ),
-      bodyLarge: GoogleFonts.inter(
-        fontSize: 18,
-        height: 1.6,
-        color: colorScheme.onBackground.withOpacity(0.85),
-      ),
-      bodyMedium: GoogleFonts.inter(
-        fontSize: 16,
-        height: 1.5,
-        color: colorScheme.onBackground.withOpacity(0.7),
-      ),
-      labelLarge: GoogleFonts.inter(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 1.1,
       ),
     );
   }

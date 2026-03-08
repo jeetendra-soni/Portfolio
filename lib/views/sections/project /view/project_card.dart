@@ -46,7 +46,6 @@ class _ProjectCardState extends State<ProjectCard> {
                 // height: width < 700 ? 180 : width < 1100 ? 200: 220,
                 height: 220,
                 width: 380,
-                margin: EdgeInsets.only(bottom: width < 700 ?0:16),
                 decoration: BoxDecoration(
                   color: const Color(0xfff5f6f8),
                   borderRadius: BorderRadius.circular(12),

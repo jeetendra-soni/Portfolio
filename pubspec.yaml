@@ -35,3 +35,30 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/fonts/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 700
+    - family: Rowdies
+      fonts:
+        - asset: assets/fonts/Rowdies-Regular.ttf
+        - asset: assets/fonts/Rowdies-Bold.ttf
+          weight: 700
+    - family: JosefinSans
+      fonts:
+        - asset: assets/fonts/JosefinSans-Regular.ttf
+          weight: 700
+    - family: DancingScript
+      fonts:
+        - asset: assets/fonts/DancingScript-Regular.ttf
+          weight: 700
+    - family: CrimsonPro
+      fonts:
+        - asset: assets/fonts/CrimsonPro-Regular.ttf
+          weight: 700
+    - family: Aclonica
+      fonts:
+        - asset: assets/fonts/Aclonica-Regular.ttf

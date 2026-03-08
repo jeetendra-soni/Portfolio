@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:jeetendra_portfolio/configs/app_fonts.dart';
 import 'package:jeetendra_portfolio/configs/theme_config.dart';
 import 'package:jeetendra_portfolio/views/widgets/dialogs/login_dialog.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navbar_logo.dart';
@@ -90,29 +92,36 @@ class _DesktopNav extends StatelessWidget {
       children: [
         const NavBarLogo(),
         const SizedBox(width: 12),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "JEETENDRA SONI",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w900,
-                fontSize: 18,
-                letterSpacing: 1.2,
-                fontFamily: 'Inter',
+        GestureDetector(
+          onLongPress: (){
+            showDialog(context: context, builder: (context){
+              return LoginDialog();
+            });
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "JEETENDRA SONI",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  letterSpacing: 1.2,
+                  fontFamily: AppFonts.rowdiesFamily,
+                ),
               ),
-            ),
-            Text(
-              "Mobile App Developer",
-              style: TextStyle(
-                color: AppTheme.primary,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+              Text(
+                "Mobile App Developer",
+                style: TextStyle(
+                  color: AppTheme.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const Spacer(),
         _NavLink(title: "Home", onTap: onHomeTap),
@@ -132,7 +141,7 @@ class _DesktopNav extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: const Text("Contact Me"),
+          child: Text("Contact Me", style: TextStyle(fontSize: 14, fontFamily: AppFonts.rowdiesFamily, color: Colors.black),),
         ),
         // ElevatedButton(
         //   onPressed: (){
@@ -183,7 +192,7 @@ class _MobileNav extends StatelessWidget {
             Text(
               "Flutter Developer",
               style: TextStyle(
-                color: AppTheme.secondary,
+                color: AppTheme.primary,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),

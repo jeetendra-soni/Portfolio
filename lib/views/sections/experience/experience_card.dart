@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jeetendra_portfolio/admin/experience/model/experience_model.dart';
+import 'package:jeetendra_portfolio/configs/app_fonts.dart';
 import 'package:jeetendra_portfolio/configs/theme_config.dart';
 
 class ExperienceCard extends StatefulWidget {
@@ -167,7 +169,9 @@ class _ExperienceCardState extends State<ExperienceCard>
                                               style: TextStyle(
                                                 height: 1.6,
                                                 fontSize: isMobile ? 14 : 15,
-                                                color: Colors.black87.withOpacity(0.8),
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontFamily: AppFonts.josefinSansFamily,
                                               ),
                                             ),
                                           ),
@@ -232,8 +236,8 @@ class _DesktopHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(role, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              Text(company, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black)),
+              Text(role, style:  TextStyle(fontSize: 22, fontWeight: FontWeight.w500, fontFamily: AppFonts.rowdiesFamily,)),
+              Text(company, style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black,fontFamily: AppFonts.josefinSansFamily,)),
             ],
           ),
         ),
@@ -262,7 +266,7 @@ class _MobileHeader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(role, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(role, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: AppFonts.rowdiesFamily,)),
                   Text(company, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black)),
                 ],
               ),
@@ -291,8 +295,8 @@ class _IndexBadge extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          "${index + 1}",
-          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: Colors.white),
+          "${index + 1}.",
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: AppFonts.rowdiesFamily),
         ),
       ),
     );

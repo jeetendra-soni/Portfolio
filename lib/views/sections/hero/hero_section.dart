@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/model/personal_info_model.dart';
+import 'package:jeetendra_portfolio/configs/app_fonts.dart';
 import 'package:jeetendra_portfolio/views/widgets/social_links.dart';
 import 'package:jeetendra_portfolio/utils/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -356,7 +357,7 @@ class _HeroTextContent extends StatelessWidget {
               height: 1.1,
               fontWeight: FontWeight.w900,
               color: Colors.white,
-              fontFamily: GoogleFonts.aclonica().fontFamily,
+              fontFamily: AppFonts.aclonicaFamily,
             ),
           ),
         ),
@@ -382,7 +383,7 @@ class _HeroTextContent extends StatelessWidget {
                   height: 1.1,
                   fontWeight: FontWeight.w900,
                   color: Colors.white,
-                  fontFamily: GoogleFonts.dancingScript().fontFamily
+                  fontFamily: AppFonts.dancingScriptFamily
                 ),
               ),
             );
@@ -394,9 +395,11 @@ class _HeroTextContent extends StatelessWidget {
           "I'm a Flutter & Dart Enthusiast with 3+ years of experience in crafting high-performance, scalable mobile and web applications with beautiful user interfaces.",
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withOpacity(0.9),
+            fontWeight: FontWeight.bold,
             fontSize: isMobile ? (isTablet ? 18 : 15) : 20,
             height: 1.6,
+            fontFamily: AppFonts.josefinSansFamily,
           ),
         ),
         const SizedBox(height: 48),
@@ -408,7 +411,9 @@ class _HeroTextContent extends StatelessWidget {
             CustomButton(
               icon: const Icon(Icons.send_rounded, size: 20, color: Colors.black),
               title: "Let's Talk",
-              onTap: () {},
+              onTap: () {
+
+              },
             ),
             const _SecondaryCTA(),
           ],

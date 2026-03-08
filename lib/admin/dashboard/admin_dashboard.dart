@@ -6,6 +6,7 @@ import 'package:jeetendra_portfolio/admin/experience/ui/exp_manager.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/ui/personal_info_page.dart';
 import 'package:jeetendra_portfolio/admin/projects/ui/project_manager.dart';
 import 'package:jeetendra_portfolio/admin/skills/ui/skill_manager.dart';
+import 'package:jeetendra_portfolio/configs/theme_config.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   const AdminDashboard({super.key});
@@ -156,7 +157,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? Theme.of(context).colorScheme.primary : null,
+        color: isSelected ? AppTheme.primary : null,
       ),
       title: Text(
         label,
