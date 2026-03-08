@@ -112,22 +112,22 @@ class _InfoCard extends StatelessWidget {
             _SectionTitle("Profile"),
             _item(Icons.person, info.name),
             _item(Icons.badge, info.title),
-            _item(Icons.location_on, info.location),
+            _item(Icons.location_on, info.contact!.address),
             const SizedBox(height: 12),
             Text(info.bio),
 
             const Divider(height: 40),
 
             _SectionTitle("Contact"),
-            _item(Icons.email, info.email),
-            _item(Icons.phone, info.phone),
+            _item(Icons.email, info.contact!.email),
+            _item(Icons.phone, info.contact!.mobile),
 
             const Divider(height: 40),
 
             _SectionTitle("Social"),
-            _item(Icons.code, info.github),
-            _item(Icons.business, info.linkedin),
-            _item(Icons.public, info.website),
+            _item(Icons.code, info.socials!.git),
+            _item(Icons.business, info.socials!.linkedIn),
+            _item(Icons.public, info.socials!.website),
           ],
         ),
       ),

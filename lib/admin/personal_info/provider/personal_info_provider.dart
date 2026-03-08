@@ -7,7 +7,10 @@ Provider<PersonalInfoRepository>((ref) {
   return PersonalInfoRepository();
 });
 
+/// Fetches personal info once and caches it for the duration of the app session.
+/// Using FutureProvider ensuring only one initial call.
 final personalInfoProvider =
-StreamProvider<PersonalInfoModel?>((ref) {
-  return ref.read(personalInfoRepositoryProvider).getInfo();
+FutureProvider<PersonalInfoModel?>((ref) async {
+  final repo = ref.read(personalInfoRepositoryProvider);
+  return await repo.getInfoOnce();
 });

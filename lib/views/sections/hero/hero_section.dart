@@ -1,27 +1,36 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:jeetendra_portfolio/utils/url_launcher.dart';
+import 'package:jeetendra_portfolio/admin/personal_info/model/personal_info_model.dart';
 import 'package:jeetendra_portfolio/views/widgets/social_links.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../../utils/animated_container.dart';
+import 'package:jeetendra_portfolio/utils/url_launcher.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../utils/buttons/iconButton.dart';
+import '../../../utils/animated_container.dart';
 
 class HeroSection extends StatefulWidget {
-  const HeroSection({super.key});
+  final PersonalInfoModel profileInfo;
+
+  const HeroSection({super.key, required this.profileInfo});
 
   @override
   State<HeroSection> createState() => _HeroSectionState();
 }
 
-class _HeroSectionState extends State<HeroSection>
-    with TickerProviderStateMixin {
+class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin {
   late AnimationController _mainController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
 
-  // For staggered entrance of text lines
-  late AnimationController _textController;
+  // For looping typewriter animation
+  late AnimationController _typewriterController;
+  
+  final List<String> _expertiseTexts = [
+    "Building Digital Products.",
+    "Flutter & Dart Enthusiast.",
+    "Mobile & Web Developer.",
+  ];
+  int _currentTextIndex = 0;
 
   @override
   void initState() {
@@ -32,9 +41,10 @@ class _HeroSectionState extends State<HeroSection>
       duration: const Duration(milliseconds: 1500),
     );
 
-    _textController = AnimationController(
+    // Looping controller for typewriter
+    _typewriterController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 2500),
     );
 
     _fadeAnimation = CurvedAnimation(
@@ -58,20 +68,37 @@ class _HeroSectionState extends State<HeroSection>
     );
 
     _mainController.forward();
-    _textController.forward();
+    
+    // Setup typewriter loop
+    _startTypewriterLoop();
+  }
+
+  void _startTypewriterLoop() async {
+    while (mounted) {
+      await _typewriterController.forward();
+      await Future.delayed(const Duration(seconds: 2));
+      await _typewriterController.reverse();
+      if (mounted) {
+        setState(() {
+          _currentTextIndex = (_currentTextIndex + 1) % _expertiseTexts.length;
+        });
+      }
+    }
   }
 
   @override
   void dispose() {
     _mainController.dispose();
-    _textController.dispose();
+    _typewriterController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final isMobile = constraints.maxWidth < 900;
+      final width = constraints.maxWidth;
+      final isMobile = width < 600;
+      final isTablet = width >= 600 && width < 1100;
 
       return Container(
         width: double.infinity,
@@ -79,47 +106,60 @@ class _HeroSectionState extends State<HeroSection>
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            // --- Staggered Background Blobs (Cool Colors) ---
+            // --- Background Blobs ---
             _AnimatedBlob(
               delay: 0,
-              alignment: const Alignment(-1.2, -1.2),
-              color: Colors.cyan.withOpacity(0.15), 
-              size: 600,
+              alignment: isMobile ? const Alignment(0, -0.8) : isTablet ? const Alignment(-0.8, -0.8) : const Alignment(-1.2, -1.2),
+              color: Colors.cyan.withOpacity(0.15),
+              size: isMobile ? 300 : isTablet ? 450 : 600,
             ),
             _AnimatedBlob(
               delay: 500,
-              alignment: const Alignment(1.2, 1.2),
-              color: Colors.blueAccent.withOpacity(0.1), 
-              size: 500,
+              alignment: isMobile ? const Alignment(0, 0.8) : isTablet ? const Alignment(0.8, 0.8) : const Alignment(1.2, 1.2),
+              color: Colors.blueAccent.withOpacity(0.1),
+              size: isMobile ? 250 : isTablet ? 350 : 500,
             ),
 
             // --- Main Content ---
             Padding(
               padding: EdgeInsets.only(
-                top: isMobile ? 40 : 80,
-                bottom: isMobile ? 60 : 120,
-                left: isMobile ? 24 : 60,
-                right: isMobile ? 24 : 60,
+                top: isMobile ? 20 : isTablet ? 50 : 80,
+                bottom: isMobile ? 40 : 120,
+                left: isMobile ? 16 : 40,
+                right: isMobile ? 16 : 40,
               ),
               child: isMobile
                   ? _HeroMobile(
                       fade: _fadeAnimation,
                       slide: _slideAnimation,
                       scale: _scaleAnimation,
-                      textController: _textController,
+                      typewriterController: _typewriterController,
+                      name: widget.profileInfo.name,
+                      currentExpertise: _expertiseTexts[_currentTextIndex],
+                      isTablet: false,
                     )
-                  : _HeroDesktop(
+                  : isTablet 
+                    ? _HeroTablet(
                       fade: _fadeAnimation,
                       slide: _slideAnimation,
                       scale: _scaleAnimation,
-                      textController: _textController,
+                      typewriterController: _typewriterController,
+                      name: widget.profileInfo.name,
+                      currentExpertise: _expertiseTexts[_currentTextIndex],
+                    )
+                    : _HeroDesktop(
+                      fade: _fadeAnimation,
+                      slide: _slideAnimation,
+                      scale: _scaleAnimation,
+                      typewriterController: _typewriterController,
+                      name: widget.profileInfo.name,
+                      currentExpertise: _expertiseTexts[_currentTextIndex],
                     ),
             ),
 
-            // --- Scroll Indicator (Fades in last) ---
             if (!isMobile)
               Positioned(
-                bottom: 30,
+                bottom: isTablet ? 15 : 30,
                 child: FadeTransition(
                   opacity: CurvedAnimation(
                     parent: _mainController,
@@ -132,6 +172,251 @@ class _HeroSectionState extends State<HeroSection>
         ),
       );
     });
+  }
+}
+
+class _HeroDesktop extends StatelessWidget {
+  final Animation<double> fade;
+  final Animation<Offset> slide;
+  final Animation<double> scale;
+  final AnimationController typewriterController;
+  final String name;
+  final String currentExpertise;
+
+  const _HeroDesktop({
+    required this.fade,
+    required this.slide,
+    required this.scale,
+    required this.typewriterController,
+    required this.name,
+    required this.currentExpertise,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 3,
+          child: _HeroTextContent(
+            isMobile: false, 
+            isTablet: false, 
+            typewriterController: typewriterController,
+            name: name,
+            currentExpertise: currentExpertise,
+          ),
+        ),
+        const SizedBox(width: 40),
+        FadeTransition(
+          opacity: fade,
+          child: ScaleTransition(
+            scale: scale,
+            child: const _AnimatedProfile(isMobile: false, isTablet: false),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HeroTablet extends StatelessWidget {
+  final Animation<double> fade;
+  final Animation<Offset> slide;
+  final Animation<double> scale;
+  final AnimationController typewriterController;
+  final String name;
+  final String currentExpertise;
+
+  const _HeroTablet({
+    required this.fade,
+    required this.slide,
+    required this.scale,
+    required this.typewriterController,
+    required this.name,
+    required this.currentExpertise,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _HeroMobile(
+      fade: fade,
+      slide: slide,
+      scale: scale,
+      typewriterController: typewriterController,
+      name: name,
+      currentExpertise: currentExpertise,
+      isTablet: true,
+    );
+  }
+}
+
+class _HeroMobile extends StatelessWidget {
+  final Animation<double> fade;
+  final Animation<Offset> slide;
+  final Animation<double> scale;
+  final AnimationController typewriterController;
+  final String name;
+  final String currentExpertise;
+  final bool isTablet;
+
+  const _HeroMobile({
+    required this.fade,
+    required this.slide,
+    required this.scale,
+    required this.typewriterController,
+    required this.name,
+    required this.currentExpertise,
+    required this.isTablet,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        FadeTransition(
+          opacity: fade,
+          child: ScaleTransition(
+            scale: scale,
+            child: _AnimatedProfile(isMobile: true, isTablet: isTablet),
+          ),
+        ),
+        SizedBox(height: isTablet ? 40 : 30),
+        _HeroTextContent(
+          isMobile: true, 
+          isTablet: isTablet, 
+          typewriterController: typewriterController,
+          name: name,
+          currentExpertise: currentExpertise,
+        ),
+      ],
+    );
+  }
+}
+
+class _HeroTextContent extends StatelessWidget {
+  final bool isMobile;
+  final bool isTablet;
+  final AnimationController typewriterController;
+  final String name;
+  final String currentExpertise;
+
+  const _HeroTextContent({
+    required this.isMobile,
+    required this.isTablet,
+    required this.typewriterController,
+    required this.name,
+    required this.currentExpertise,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        // Welcome Badge
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.cyan.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.cyan.withOpacity(0.3)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.handshake_outlined, size: 16, color: Colors.cyanAccent),
+              const SizedBox(width: 8),
+              Text(
+                "WELCOME TO MY PORTFOLIO",
+                style: TextStyle(
+                  fontSize: isMobile ? (isTablet ? 14 : 11) : 14,
+                  color: Colors.cyanAccent,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+        
+        // Static Name
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Colors.cyanAccent, Colors.blueAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(bounds),
+          child: Text(
+            name,
+            textAlign: isMobile ? TextAlign.center : TextAlign.start,
+            style: TextStyle(
+              fontSize: isMobile ? (isTablet ? 50 : 34) : 60,
+              height: 1.1,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              fontFamily: GoogleFonts.aclonica().fontFamily,
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 10),
+
+        // Looping Typewriter Expertise
+        AnimatedBuilder(
+          animation: typewriterController,
+          builder: (context, child) {
+            final count = (currentExpertise.length * typewriterController.value).floor();
+            return ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [Colors.orangeAccent, Colors.orange],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds),
+              child: Text(
+                currentExpertise.substring(0, count),
+                textAlign: isMobile ? TextAlign.center : TextAlign.start,
+                style: TextStyle(
+                  fontSize: isMobile ? (isTablet ? 35 : 24) : 45,
+                  height: 1.1,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  fontFamily: GoogleFonts.dancingScript().fontFamily
+                ),
+              ),
+            );
+          },
+        ),
+        
+        const SizedBox(height: 24),
+        Text(
+          "I'm a Flutter & Dart Enthusiast with 3+ years of experience in crafting high-performance, scalable mobile and web applications with beautiful user interfaces.",
+          textAlign: isMobile ? TextAlign.center : TextAlign.start,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontSize: isMobile ? (isTablet ? 18 : 15) : 20,
+            height: 1.6,
+          ),
+        ),
+        const SizedBox(height: 48),
+        Wrap(
+          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+          spacing: 20,
+          runSpacing: 20,
+          children: [
+            CustomButton(
+              icon: const Icon(Icons.send_rounded, size: 20, color: Colors.black),
+              title: "Let's Talk",
+              onTap: () {},
+            ),
+            const _SecondaryCTA(),
+          ],
+        ),
+        const SizedBox(height: 40),
+        SocialLinks(isMobile: isMobile),
+      ],
+    );
   }
 }
 
@@ -202,78 +487,10 @@ class _AnimatedBlobState extends State<_AnimatedBlob>
   }
 }
 
-class _HeroMobile extends StatelessWidget {
-  final Animation<double> fade;
-  final Animation<Offset> slide;
-  final Animation<double> scale;
-  final AnimationController textController;
-
-  const _HeroMobile({
-    required this.fade,
-    required this.slide,
-    required this.scale,
-    required this.textController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FadeTransition(
-          opacity: fade,
-          child: ScaleTransition(
-            scale: scale,
-            child: const _AnimatedProfile(isMobile: true),
-          ),
-        ),
-        const SizedBox(height: 50),
-        _HeroText(isMobile: true, controller: textController),
-      ],
-    );
-  }
-}
-
-class _HeroDesktop extends StatelessWidget {
-  final Animation<double> fade;
-  final Animation<Offset> slide;
-  final Animation<double> scale;
-  final AnimationController textController;
-
-  const _HeroDesktop({
-    required this.fade,
-    required this.slide,
-    required this.scale,
-    required this.textController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          flex: 3,
-          child: _HeroText(isMobile: false, controller: textController),
-        ),
-        const SizedBox(width: 80),
-        Expanded(
-          flex: 2,
-          child: FadeTransition(
-            opacity: fade,
-            child: ScaleTransition(
-              scale: scale,
-              child: const _AnimatedProfile(isMobile: false),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _AnimatedProfile extends StatefulWidget {
   final bool isMobile;
-  const _AnimatedProfile({required this.isMobile});
+  final bool isTablet;
+  const _AnimatedProfile({required this.isMobile, required this.isTablet});
 
   @override
   State<_AnimatedProfile> createState() => _AnimatedProfileState();
@@ -300,7 +517,9 @@ class _AnimatedProfileState extends State<_AnimatedProfile>
 
   @override
   Widget build(BuildContext context) {
-    double size = widget.isMobile ? 220 : 340;
+    double size = widget.isMobile ? (widget.isTablet ? 300 : 200) : 380;
+    double iconRadius = widget.isMobile && !widget.isTablet ? size * 0.7 : size * 0.8;
+    
     return AnimatedBuilder(
       animation: _floatController,
       builder: (context, child) {
@@ -316,7 +535,7 @@ class _AnimatedProfileState extends State<_AnimatedProfile>
           child: Stack(
             alignment: Alignment.center,
             children: [
-              _RotatingBorder(size: size + 40),
+              _RotatingBorder(size: size + 60),
               Container(
                 width: size,
                 height: size,
@@ -329,7 +548,7 @@ class _AnimatedProfileState extends State<_AnimatedProfile>
                       spreadRadius: 10,
                     ),
                   ],
-                  gradient:  LinearGradient(
+                  gradient: LinearGradient(
                     colors: [Colors.orange.shade200, Colors.orangeAccent.shade200],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -345,21 +564,19 @@ class _AnimatedProfileState extends State<_AnimatedProfile>
                 ),
                 child: ClipOval(
                   child: Image.asset(
-                    "assets/images/profile.jpeg",
+                    "assets/images/profile.png",
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.orangeAccent.shade400,
-                      child: const Icon(Icons.person, color: Colors.white, size: 80),
+                      child: Icon(Icons.person, color: Colors.white, size: size * 0.4),
                     ),
                   ),
                 ),
               ),
-              if (!widget.isMobile) ...[
-                const _FloatingIcon(icon: Icons.flutter_dash, angle: -0.5, radius: 180),
-                const _FloatingIcon(icon: Icons.code, angle: 0.8, radius: 190),
-                const _FloatingIcon(icon: Icons.storage, angle: 2.5, radius: 175),
-                const _FloatingIcon(icon: Icons.api, angle: 4.2, radius: 185),
-              ],
+              _FloatingIcon(icon: Icons.flutter_dash, angle: -0.5, radius: iconRadius),
+              _FloatingIcon(icon: Icons.code, angle: 0.8, radius: iconRadius * 1.05),
+              _FloatingIcon(icon: Icons.storage, angle: 2.5, radius: iconRadius * 0.95),
+              _FloatingIcon(icon: Icons.api, angle: 4.2, radius: iconRadius * 1.02),
             ],
           ),
         ),
@@ -439,7 +656,7 @@ class _DashedCirclePainter extends CustomPainter {
     canvas.drawCircle(
       Offset(radius + radius * math.cos(0), radius + radius * math.sin(0)),
       4,
-      Paint()..color = Colors.cyanAccent, 
+      Paint()..color = Colors.cyanAccent,
     );
   }
 
@@ -474,7 +691,7 @@ class _FloatingIcon extends StatelessWidget {
             border: Border.all(color: Colors.white10),
             boxShadow: [
               BoxShadow(
-                color: Colors.cyanAccent.withOpacity(0.2), 
+                color: Colors.cyanAccent.withOpacity(0.2),
                 blurRadius: 10,
               ),
             ],
@@ -528,159 +745,6 @@ class _FloatAnimationState extends State<_FloatAnimation>
   }
 }
 
-class _HeroText extends StatelessWidget {
-  final bool isMobile;
-  final AnimationController controller;
-
-  const _HeroText({required this.isMobile, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment:
-          isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-      children: [
-        _StaggeredItem(
-          controller: controller,
-          interval: const Interval(0.0, 0.4, curve: Curves.easeOut),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.cyan.withOpacity(0.1), 
-              borderRadius: BorderRadius.circular(20),
-              border:
-                  Border.all(color: Colors.cyan.withOpacity(0.3)), 
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.handshake_outlined,
-                    size: 16, color: Colors.cyanAccent), 
-                const SizedBox(width: 8),
-                Text(
-                  "WELCOME TO MY PORTFOLIO",
-                  style: TextStyle(
-                    fontSize: isMobile ? 12 : 14,
-                    color: Colors.cyanAccent, 
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        _StaggeredItem(
-          controller: controller,
-          interval: const Interval(0.2, 0.6, curve: Curves.easeOut),
-          child: ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [Colors.white, Colors.cyanAccent, Colors.blueAccent], 
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ).createShader(bounds),
-            child: Text.rich(
-              textAlign: isMobile ? TextAlign.center : TextAlign.start,
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: "JEETENDRA SONI",
-                    style: TextStyle(
-                      fontSize: isMobile ? 38 : 68,
-                      height: 1.1,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "\nBuilding Digital Products.",
-                    style: TextStyle(
-                      fontSize: isMobile ? 28 : 48,
-                      height: 1.1,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
-                  )
-                ]
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        _StaggeredItem(
-          controller: controller,
-          interval: const Interval(0.4, 0.8, curve: Curves.easeOut),
-          child: Text(
-            "I'm a Flutter & Dart Enthusiast with 3+ years of experience in crafting high-performance, scalable mobile and web applications with beautiful user interfaces.",
-            textAlign: isMobile ? TextAlign.center : TextAlign.start,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
-              fontSize: isMobile ? 16 : 20,
-              height: 1.6,
-            ),
-          ),
-        ),
-        const SizedBox(height: 48),
-        _StaggeredItem(
-          controller: controller,
-          interval: const Interval(0.6, 1.0, curve: Curves.easeOut),
-          child: Wrap(
-            alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
-            spacing: 20,
-            runSpacing: 20,
-            children: [
-              CustomButton(
-                icon: const Icon(Icons.send_rounded,
-                    size: 20, color: Colors.black),
-                title: "Let's Talk",
-                onTap: () {},
-              ),
-              const _SecondaryCTA(),
-            ],
-          ),
-        ),
-        const SizedBox(height: 40),
-        _StaggeredItem(
-          controller: controller,
-          interval: const Interval(0.7, 1.0, curve: Curves.easeOut),
-          child: SocialLinks(isMobile: isMobile),
-        ),
-      ],
-    );
-  }
-}
-
-class _StaggeredItem extends StatelessWidget {
-  final AnimationController controller;
-  final Interval interval;
-  final Widget child;
-
-  const _StaggeredItem({
-    required this.controller,
-    required this.interval,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        final animation = CurvedAnimation(parent: controller, curve: interval);
-        return Opacity(
-          opacity: animation.value,
-          child: Transform.translate(
-            offset: Offset(0, 30 * (1 - animation.value)),
-            child: child,
-          ),
-        );
-      },
-      child: child,
-    );
-  }
-}
-
 class _SecondaryCTA extends StatelessWidget {
   const _SecondaryCTA();
 
@@ -692,22 +756,24 @@ class _SecondaryCTA extends StatelessWidget {
         child: OutlinedButton(
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 30),
-            side: const BorderSide(color: Colors.cyan), 
+            side: const BorderSide(color: Colors.cyan),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
             ),
             backgroundColor: Colors.transparent,
           ),
-          onPressed: () {},
+          onPressed: () {
+             urlLauncher(url: "https://firebasestorage.googleapis.com/v0/b/jeetendra-soni-portfolio.firebasestorage.app/o/resume%2FJeetendra-Soni(Flutter).pdf?alt=media&token=34483284-5205-44a2-b123-603094f88770");
+          },
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: const [
-              Icon(Icons.download_rounded, size: 20, color: Colors.cyan), 
+              Icon(Icons.download_rounded, size: 20, color: Colors.cyan),
               SizedBox(width: 10),
               Text(
                 'Resume',
                 style: TextStyle(
-                  color: Colors.cyan, 
+                  color: Colors.cyan,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -778,7 +844,7 @@ class _ScrollIndicatorState extends State<_ScrollIndicator>
                         width: 4,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: Colors.cyanAccent, 
+                          color: Colors.cyanAccent,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),

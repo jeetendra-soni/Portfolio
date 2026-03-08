@@ -20,11 +20,13 @@ class _ProjectCardState extends State<ProjectCard> {
   @override
   Widget build(BuildContext context) {
     final project = widget.project;
+    final width = MediaQuery.of(context).size.width;
 
     return MouseRegion(
       onEnter: (_) => setState(() => hovered = true),
       onExit: (_) => setState(() => hovered = false),
       child: AnimatedContainer(
+        width: 380,
         duration: const Duration(milliseconds: 250),
         // padding: EdgeInsets.symmetric(vertical: 32),
         transform: hovered ? (Matrix4.identity()..translate(0, -12)) : Matrix4.identity(),
@@ -41,9 +43,10 @@ class _ProjectCardState extends State<ProjectCard> {
             children: [
               // ================= HERO SECTION =================
               Container(
+                // height: width < 700 ? 180 : width < 1100 ? 200: 220,
                 height: 220,
-                width: double.infinity,
-                margin: EdgeInsets.only(bottom: 16),
+                width: 380,
+                margin: EdgeInsets.only(bottom: width < 700 ?0:16),
                 decoration: BoxDecoration(
                   color: const Color(0xfff5f6f8),
                   borderRadius: BorderRadius.circular(12),
@@ -52,6 +55,7 @@ class _ProjectCardState extends State<ProjectCard> {
                 child: project.bannerImage.isNotEmpty ? Image.network(project.bannerImage, fit: BoxFit.fill) : Container(color: Colors.grey.shade200, child: const Icon(Icons.image, size: 32)),
               ),
               ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 12),
                 leading: Container(
                   height: 50,
                   width: 50,
@@ -76,7 +80,9 @@ class _ProjectCardState extends State<ProjectCard> {
                   ],
                 ),
               ),
-              Divider(),
+              Divider(
+                height: 2,
+              ),
               // ================= CONTENT SECTION =================
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

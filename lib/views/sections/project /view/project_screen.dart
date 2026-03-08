@@ -12,42 +12,56 @@ class ProjectsSection extends ConsumerWidget {
 
     final asyncProjects = ref.watch(projectStreamProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionTitle(title: 'Projects'),
-        const SizedBox(height: 40),
-        asyncProjects.when(
-          loading: () => const Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          error: (e, _) => const Center(
-            child: Text("Something went wrong."),
-          ),
-          data: (projects) {
-
-            final width = MediaQuery.of(context).size.width;
-
-            return GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: projects.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: width < 700 ? 1 : width < 1100 ? 2: 3,
-                crossAxisSpacing: 32,
-                mainAxisSpacing: 32,
-                childAspectRatio: width < 700 ? .60 : width < 1100 ? .50 : 0.60,
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionTitle(title: 'Projects'),
+          const SizedBox(height: 40),
+          asyncProjects.when(
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(40),
+                child: CircularProgressIndicator(),
               ),
-              itemBuilder: (context, index) {
-                return ProjectCard(project: projects[index]);
-              },
-            );
-          },
-        ),
-      ],
+            ),
+            error: (e, _) => const Center(
+              child: Text("Something went wrong."),
+            ),
+            data: (projects) {
+
+              final width = MediaQuery.of(context).size.width;
+
+              return Center(
+                child: Wrap(
+                  spacing: 64,
+                  runSpacing: 64,
+                  // crossAxisAlignment: WrapCrossAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  children: projects.map((project) {
+                    return ProjectCard(project: project);
+                  }).toList(),
+                ),
+              );
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: projects.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: width < 700 ? 1 : width < 1100 ? 2: 3,
+                  crossAxisSpacing: 32,
+                  mainAxisSpacing: 32,
+                  childAspectRatio: width < 700 ? .60 : width < 1100 ? .55 : 0.60,
+                ),
+                itemBuilder: (context, index) {
+                  return ProjectCard(project: projects[index]);
+                },
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

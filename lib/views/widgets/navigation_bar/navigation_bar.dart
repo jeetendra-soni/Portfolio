@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jeetendra_portfolio/configs/theme_config.dart';
+import 'package:jeetendra_portfolio/views/widgets/dialogs/login_dialog.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navbar_logo.dart';
 
 class MyNavigationBar extends StatelessWidget {
@@ -33,14 +34,14 @@ class MyNavigationBar extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: double.infinity,
-          height: 80,
+          height: 100,
           decoration: BoxDecoration(
             color: AppTheme.darkBackground.withOpacity(0.8),
             border: const Border(
               bottom: BorderSide(color: Colors.white10, width: 1),
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           child: LayoutBuilder(builder: (context, constraints) {
             if (constraints.maxWidth < AppBreakpoints.tablet) {
               return _MobileNav(
@@ -104,9 +105,9 @@ class _DesktopNav extends StatelessWidget {
               ),
             ),
             Text(
-              "Flutter Developer",
+              "Mobile App Developer",
               style: TextStyle(
-                color: AppTheme.secondary,
+                color: AppTheme.primary,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -133,6 +134,23 @@ class _DesktopNav extends StatelessWidget {
           ),
           child: const Text("Contact Me"),
         ),
+        // ElevatedButton(
+        //   onPressed: (){
+        //     showDialog(context: context, builder: (context){
+        //       return LoginDialog();
+        //     });
+        //
+        //   },
+        //   style: ElevatedButton.styleFrom(
+        //     backgroundColor: AppTheme.primary,
+        //     foregroundColor: Colors.white,
+        //     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(12),
+        //     ),
+        //   ),
+        //   child: const Text("Login"),
+        // ),
       ],
     );
   }

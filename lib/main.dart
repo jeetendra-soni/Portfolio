@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/personal_info/model/personal_info_model.dart';
+import 'package:jeetendra_portfolio/admin/personal_info/provider/personal_info_provider.dart';
 import 'package:jeetendra_portfolio/views/sections/award_achievement/award_achivement.dart';
 import 'package:jeetendra_portfolio/views/sections/project%20/view/project_screen.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navigation_bar.dart';
@@ -38,14 +40,14 @@ class PortfolioApp extends StatelessWidget {
 }
 
 /// ---------------- PAGE ----------------
-class PortfolioPage extends StatefulWidget {
+class PortfolioPage extends ConsumerStatefulWidget {
   const PortfolioPage({super.key});
 
   @override
-  State<PortfolioPage> createState() => _PortfolioPageState();
+  ConsumerState<PortfolioPage> createState() => _PortfolioPageState();
 }
 
-class _PortfolioPageState extends State<PortfolioPage> {
+class _PortfolioPageState extends ConsumerState<PortfolioPage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -74,10 +76,41 @@ class _PortfolioPageState extends State<PortfolioPage> {
     );
   }
 
+  PersonalInfoModel? info;
+
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
+      info = await ref.read(personalInfoProvider.future);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        toolbarHeight: 70,
+        elevation: 0,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: MyNavigationBar(
+            onHomeTap: () => scrollTo(homeKey),
+            onAboutTap: () => scrollTo(aboutKey),
+            onSkillsTap: () => scrollTo(skillsKey),
+            onExperienceTap: () => scrollTo(experienceKey),
+            onTestimonialTap: () => scrollTo(testimonialKey),
+            onProjectsTap: () => scrollTo(portfolioKey),
+            onContactTap: () => scrollTo(contactKey),
+            onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
+          ),
+        ),
+        titleSpacing: 0,
+        automaticallyImplyLeading: false,
+      ),
       drawer: _MobileDrawer(
         onHomeTap: () {
           scrollTo(homeKey);
@@ -110,6 +143,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
       ),
       body: Stack(
         children: [
+          const SizedBox(height: kTextTabBarHeight,),
           CustomScrollView(
             controller: _scrollController,
             slivers: [
@@ -122,7 +156,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                       key: homeKey,
                       background: Colors.black,
                       showBottomDivider: false,
-                      child: const HeroSection(),
+                      child: HeroSection(profileInfo: info!,),
                     ),
                     SectionContainer(
                       key: aboutKey,
@@ -131,7 +165,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                     ),
                     SectionContainer(
                       key: experienceKey,
-                      background: Colors.white,
+                      background: Colors.blueGrey.shade50,
                       child: const ExperienceSection(),
                     ),
                     SectionContainer(
@@ -141,12 +175,12 @@ class _PortfolioPageState extends State<PortfolioPage> {
                     ),
                     SectionContainer(
                       key: portfolioKey,
-                      background: const Color(0xFFF5F7FA),
+                      background: const Color(0xFFF5F5FF),
                       child: const ProjectsSection(),
                     ),
                     SectionContainer(
                       key: achievementKey,
-                      background: const Color(0xFFF5F7EA),
+                      background: const Color(0xFFF5F7EE),
                       child: const AwardsSection(),
                     ),
                     SectionContainer(
@@ -163,23 +197,6 @@ class _PortfolioPageState extends State<PortfolioPage> {
                 ),
               ),
             ],
-          ),
-
-          /// ---------- FIXED GLASS NAVIGATION BAR ----------
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: MyNavigationBar(
-              onHomeTap: () => scrollTo(homeKey),
-              onAboutTap: () => scrollTo(aboutKey),
-              onSkillsTap: () => scrollTo(skillsKey),
-              onExperienceTap: () => scrollTo(experienceKey),
-              onTestimonialTap: () => scrollTo(testimonialKey),
-              onProjectsTap: () => scrollTo(portfolioKey),
-              onContactTap: () => scrollTo(contactKey),
-              onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
-            ),
           ),
         ],
       ),
@@ -209,7 +226,6 @@ class _MobileDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Drawer(
       backgroundColor: AppTheme.darkBackground,
@@ -237,7 +253,7 @@ class _MobileDrawer extends StatelessWidget {
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
-                          colors: [AppTheme.primary, AppTheme.secondary],
+                          colors: [AppTheme.primaryBlue, AppTheme.secondaryCyan],
                         ),
                       ),
                       child: const CircleAvatar(
@@ -264,9 +280,9 @@ class _MobileDrawer extends StatelessWidget {
                       ),
                     ),
                     const Text(
-                      "Flutter Developer",
+                      "Mobile App Developer",
                       style: TextStyle(
-                        color: AppTheme.secondary,
+                        color: AppTheme.secondaryCyan,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -312,7 +328,7 @@ class _MobileDrawer extends StatelessWidget {
                     ElevatedButton(
                       onPressed: onContactTap,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
+                        backgroundColor: AppTheme.primaryBlue,
                         minimumSize: const Size(double.infinity, 56),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -369,7 +385,7 @@ class _DrawerItem extends StatelessWidget {
         ),
       ),
       onTap: onTap,
-      hoverColor: AppTheme.primary.withOpacity(0.1),
+      hoverColor: AppTheme.primaryBlue.withOpacity(0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     );
   }

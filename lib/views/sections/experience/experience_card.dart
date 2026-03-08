@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jeetendra_portfolio/admin/experience/model/experience_model.dart';
+import 'package:jeetendra_portfolio/configs/theme_config.dart';
 
 class ExperienceCard extends StatefulWidget {
   final int index;
@@ -40,8 +41,7 @@ class _ExperienceCardState extends State<ExperienceCard>
       duration: const Duration(milliseconds: 600),
     );
 
-    _fadeAnimation =
-        CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, .1),
@@ -59,265 +59,241 @@ class _ExperienceCardState extends State<ExperienceCard>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 50),
-          child: MouseRegion(
-            onEnter: (_) => setState(() => isHovering = true),
-            onExit: (_) => setState(() => isHovering = false),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(26),
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xffffffff),
-                    Color(0xfff8fafc),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: isHovering
-                        ?  Colors.orangeAccent.withOpacity(.15)
-                        : Colors.black.withOpacity(.05),
-                    blurRadius: isHovering ? 40 : 25,
-                    offset: const Offset(0, 15),
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+    return LayoutBuilder(builder: (context, constraints) {
+      final isMobile = constraints.maxWidth < 700;
 
-                  /// LEFT TIMELINE ACCENT
-                  Container(
-                    width: 4,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Colors.orangeAccent,
-                          Colors.orange,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
+      return FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: MouseRegion(
+              onEnter: (_) => setState(() => isHovering = true),
+              onExit: (_) => setState(() => isHovering = false),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                padding: EdgeInsets.all(isMobile ? 20 : 32),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(26),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: isHovering ? AppTheme.primary.withOpacity(0.3) : Colors.black.withOpacity(0.05),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isHovering
+                          ? AppTheme.primary.withOpacity(.08)
+                          : Colors.black.withOpacity(.02),
+                      blurRadius: isHovering ? 40 : 20,
+                      offset: const Offset(0, 10),
                     ),
-                  ),
+                  ],
+                ),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // --- TIMELINE ACCENT ---
+                      Container(
+                        width: 4,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: const LinearGradient(
+                            colors: [AppTheme.primary, Colors.black],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: isMobile ? 16 : 24),
 
-                  const SizedBox(width: 24),
-
-                  /// CONTENT
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-
-                        /// HEADER
-                        Row(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      // --- CONTENT ---
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Header Row
+                            if (isMobile)
+                              _MobileHeader(
+                                index: widget.index,
+                                role: widget.exe.role,
+                                company: widget.exe.company,
+                              )
+                            else
+                              _DesktopHeader(
+                                index: widget.index,
+                                role: widget.exe.role,
+                                company: widget.exe.company,
+                              ),
 
-                            /// INDEX BADGE
-                            Container(
-                              width: 65,
-                              height: 65,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.circular(18),
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Colors.orangeAccent,
-                                    Colors.orange,
-                                  ],
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "${widget.index + 1}",
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight:
-                                    FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                            const SizedBox(height: 16),
+
+                            // Tags (Location & Duration)
+                            Wrap(
+                              spacing: 12,
+                              runSpacing: 8,
+                              children: [
+                                _chip(Icons.location_on_rounded, widget.exe.location),
+                                _chip(Icons.calendar_month_rounded, formatDuration(widget.exe.startDate, widget.exe.endDate)),
+                              ],
                             ),
 
-                            const SizedBox(width: 22),
+                            const SizedBox(height: 24),
+                            Container(height: 1, color: Colors.grey.withOpacity(0.1)),
+                            const SizedBox(height: 20),
 
-                            /// TITLE SECTION
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .start,
-                                children: [
-
-                                  Text(
-                                    widget.exe.role,
-                                    style:
-                                    const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight:
-                                      FontWeight.bold,
-                                      letterSpacing: .3,
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                      height: 6),
-
-                                  Text(
-                                    widget.exe.company,
-                                    style:
-                                    const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight:
-                                      FontWeight.w600,
-                                      color: Colors.orangeAccent,
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                      height: 12),
-
-                                  Wrap(
-                                    spacing: 14,
-                                    runSpacing: 8,
-                                    children: [
-                                      _chip(
-                                        Icons
-                                            .location_on_outlined,
-                                        widget.exe
-                                            .location,
+                            // Description Points
+                            ...widget.exe.description
+                                .split(". ")
+                                .where((e) => e.trim().isNotEmpty)
+                                .map((point) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 6),
+                                            child: Icon(Icons.check_circle_rounded, 
+                                              size: 16, 
+                                              color: AppTheme.primary.withOpacity(0.7)
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              point.trim(),
+                                              style: TextStyle(
+                                                height: 1.6,
+                                                fontSize: isMobile ? 14 : 15,
+                                                color: Colors.black87.withOpacity(0.8),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      _chip(
-                                        Icons
-                                            .calendar_today_outlined,
-                                        formatDuration(
-                                            widget.exe
-                                                .startDate,
-                                            widget.exe
-                                                .endDate),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                                    ))
+                                .toList(),
                           ],
                         ),
-
-                        const SizedBox(height: 26),
-
-                        Container(
-                          height: 1,
-                          color: Colors.grey.shade200,
-                        ),
-
-                        const SizedBox(height: 22),
-
-                        /// DESCRIPTION
-                        Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: widget.exe.description
-                              .split(". ")
-                              .where((e) =>
-                          e.trim().isNotEmpty)
-                              .map(
-                                (point) => Padding(
-                              padding:
-                              const EdgeInsets
-                                  .only(
-                                  bottom: 14),
-                              child: Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .start,
-                                children: [
-
-                                  Container(
-                                    margin:
-                                    const EdgeInsets
-                                        .only(
-                                        top: 7),
-                                    width: 9,
-                                    height: 9,
-                                    decoration:
-                                    const BoxDecoration(
-                                      shape: BoxShape
-                                          .circle,
-                                      color: Colors.orangeAccent,
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                      width: 14),
-
-                                  Expanded(
-                                    child: Text(
-                                      point.trim(),
-                                      style:
-                                      const TextStyle(
-                                        height: 1.7,
-                                        fontSize: 15,
-                                        color: Colors
-                                            .black87,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                              .toList(),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _chip(IconData icon, String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: const Color(0xfff1f5f9),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.black.withOpacity(0.05),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon,
-              size: 14, color: Colors.grey.shade600),
+          Icon(icon, size: 14, color: Colors.black),
           const SizedBox(width: 6),
           Text(
             text,
             style: const TextStyle(
-              fontSize: 13,
-              color: Colors.black87,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.primary,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _DesktopHeader extends StatelessWidget {
+  final int index;
+  final String role;
+  final String company;
+
+  const _DesktopHeader({required this.index, required this.role, required this.company});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _IndexBadge(index: index),
+        const SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(role, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              Text(company, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MobileHeader extends StatelessWidget {
+  final int index;
+  final String role;
+  final String company;
+
+  const _MobileHeader({required this.index, required this.role, required this.company});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _IndexBadge(index: index, size: 40, fontSize: 18),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(role, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(company, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black)),
+                ],
+              ),
+            ),
+          ],
+        ),],
+    );
+  }
+}
+
+class _IndexBadge extends StatelessWidget {
+  final int index;
+  final double size;
+  final double fontSize;
+
+  const _IndexBadge({required this.index, this.size = 60, this.fontSize = 22});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: const LinearGradient(colors: [AppTheme.primary, Colors.black]),
+      ),
+      child: Center(
+        child: Text(
+          "${index + 1}",
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
       ),
     );
   }

@@ -11,19 +11,13 @@ class AboutSection extends StatelessWidget {
       builder: (context, constraints) {
         final isMobile = constraints.maxWidth < 900;
 
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: isMobile ? 40 : 80,
-            horizontal: isMobile ? 20 : 40,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionTitle(title: 'About Me'),
-              const SizedBox(height: 60),
-              isMobile ? const _MobileAboutLayout() : const _DesktopAboutLayout(),
-            ],
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SectionTitle(title: 'About Me'),
+            const SizedBox(height: 60),
+            isMobile ? const _MobileAboutLayout() : const _DesktopAboutLayout(),
+          ],
         );
       },
     );
@@ -125,7 +119,7 @@ class _AboutImage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  "assets/images/profile.jpeg",
+                  "assets/images/setupImg.png",
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: Colors.grey[200],
