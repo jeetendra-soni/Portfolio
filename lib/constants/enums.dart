@@ -2,7 +2,7 @@ enum AuthStatus { idle, loading, success, error }
 
 enum SkillLevel { beginner, intermediate, expert }
 
-enum SkillCategoryType { devTools, backendApis, architecture , stateManagement, language, frameWork, systemWork}
+enum SkillCategoryType { devTools, backendApis, architecture , stateManagement, language, frameWork, systemWork, others}
 
 
 extension SkillCategoryX on SkillCategoryType {
@@ -26,6 +26,8 @@ extension SkillCategoryX on SkillCategoryType {
         return "Framework";
       case SkillCategoryType.systemWork:
         return "System Work";
+      default:
+        return "Others";
     }
   }
 }

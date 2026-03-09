@@ -32,7 +32,7 @@ class _SkillCardState extends State<SkillCard> {
         transform: _hovered ? (Matrix4.identity()..translate(0, -8)) : Matrix4.identity(),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: AppColor.randomShadowColor(),
@@ -45,17 +45,21 @@ class _SkillCardState extends State<SkillCard> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: 40,
-              width: 40,
-              padding: const EdgeInsets.all(8),
+              height: 30,
+              width: 30,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 // color: widget.color.withOpacity(.1),
               ),
-              child: CachedNetworkImage(
-                imageUrl: widget.icon,
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: widget.icon,
+                  placeholder: (context, url) => const Icon(Icons.code, color: Colors.orangeAccent),
+                  errorWidget: (context, url, error) => const Icon(Icons.code, color: Colors.orangeAccent),
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -68,7 +72,7 @@ class _SkillCardState extends State<SkillCard> {
                 color: Colors.black,
                 fontFamily: AppFonts.josefinSansFamily,
               ),
-              maxLines: 2,
+              maxLines: 1,
               // overflow: TextOverflow.ellipsis,
             ),
           ],

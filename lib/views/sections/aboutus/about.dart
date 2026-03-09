@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jeetendra_portfolio/configs/app_fonts.dart';
+import 'package:jeetendra_portfolio/constants/assets_const.dart';
 import 'package:jeetendra_portfolio/utils/animated_container.dart';
 import 'package:jeetendra_portfolio/utils/utils.dart';
 
@@ -89,7 +90,7 @@ class _AboutImage extends StatelessWidget {
             height: isMobile ? 260 : 380,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: Colors.blue.withOpacity(0.2), width: 2),
+              border: Border.all(color: Colors.orange.withOpacity(0.25), width: 2),
             ),
           ),
           Transform.rotate(
@@ -99,7 +100,7 @@ class _AboutImage extends StatelessWidget {
               height: isMobile ? 260 : 380,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Colors.blue.withOpacity(0.05),
+                color: Colors.orange.withOpacity(0.1),
               ),
             ),
           ),
@@ -121,7 +122,7 @@ class _AboutImage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  "assets/images/setupImg.png",
+                  AssetsConst.aboutProfile,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: Colors.grey[200],
@@ -148,7 +149,7 @@ class _AboutText extends StatelessWidget {
         Text(
           'Bridging the gap between design and high-performance engineering.',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
                 color: Colors.orange,
                 height: 1.3,
             fontFamily: AppFonts.josefinSansFamily,

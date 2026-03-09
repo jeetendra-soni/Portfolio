@@ -7,6 +7,7 @@ import 'package:jeetendra_portfolio/admin/personal_info/ui/personal_info_page.da
 import 'package:jeetendra_portfolio/admin/projects/ui/project_manager.dart';
 import 'package:jeetendra_portfolio/admin/skills/ui/skill_manager.dart';
 import 'package:jeetendra_portfolio/configs/theme_config.dart';
+import 'package:jeetendra_portfolio/constants/assets_const.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   const AdminDashboard({super.key});
@@ -56,7 +57,16 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
                             ? NetworkImage(user!.photoURL!)
                             : null,
                         child: user?.photoURL == null
-                            ? const Icon(Icons.admin_panel_settings, size: 40)
+                            ?  ClipOval(
+                          child: Image.asset(
+                            AssetsConst.profile,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              color: Colors.orangeAccent.shade400,
+                              child: Icon(Icons.person, color: Colors.white, size: 40),
+                            ),
+                          ),
+                        )
                             : null,
                       ),
                       const SizedBox(height: 10),

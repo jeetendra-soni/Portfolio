@@ -1,11 +1,11 @@
 {
-    "name": "jeetendra_portfolio",
-    "short_name": "jeetendra_portfolio",
+    "name": "Jeetendra Soni | Flutter Developer",
+    "short_name": "Jeetendra Soni",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "Jeetendra Soni",
+    "background_color": "#030014",
+    "theme_color": "#1E88E5",
+    "description": "Jeetendra Soni - Professional Flutter & Dart Developer Portfolio",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

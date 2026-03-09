@@ -186,11 +186,11 @@ class _MobileNav extends StatelessWidget {
                 fontWeight: FontWeight.w900,
                 fontSize: 18,
                 letterSpacing: 1.2,
-                fontFamily: 'Inter',
+                fontFamily: AppFonts.rowdiesFamily,
               ),
             ),
             Text(
-              "Flutter Developer",
+              "Mobile App Developer",
               style: TextStyle(
                 color: AppTheme.primary,
                 fontSize: 12,

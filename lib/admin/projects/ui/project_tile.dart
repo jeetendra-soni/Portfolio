@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../model/project_model.dart';
 import 'package:jeetendra_portfolio/constants/enums.dart';
@@ -29,22 +30,46 @@ class ProjectTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            /// ---------------- BANNER IMAGE ----------------
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: project.icon.isNotEmpty
-                  ? Image.network(
-                project.icon,
-                width: 110,
-                height: 110,
-                fit: BoxFit.cover,
-              )
-                  : Container(
-                width: 110,
-                height: 110,
-                color: Colors.grey.shade200,
-                child: const Icon(Icons.image, size: 32),
+            /// ---------------- PROJECT ICON / BANNER ----------------
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
+              clipBehavior: Clip.antiAlias, // This ensures content stays inside the radius
+              child: project.icon.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: project.icon,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey.shade50,
+                        child: const Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.grey.shade50,
+                        child: const Icon(Icons.image_not_supported_outlined, color: Colors.grey, size: 24),
+                      ),
+                    )
+                  : Container(
+                      color: Colors.grey.shade50,
+                      child: const Icon(Icons.image_outlined, color: Colors.grey, size: 24),
+                    ),
             ),
 
             const SizedBox(width: 16),
@@ -55,7 +80,7 @@ class ProjectTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  /// Title + Featured + Order
+                  /// Title + Featured + Status
                   Row(
                     children: [
                       Expanded(
@@ -93,9 +118,6 @@ class ProjectTile extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
-
-                  const SizedBox(height: 6),
-
                   /// Description
                   Text(
                     project.description,
@@ -116,25 +138,20 @@ class ProjectTile extends StatelessWidget {
                       runSpacing: 4,
                       children: project.technologies
                           .map(
-                            (tech) => Chip(
-                          label: Text(
-                            tech,
-                            style: const TextStyle(fontSize: 11),
-                          ),
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      )
+                            (tech) => Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withOpacity(0.05),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: Colors.blue.withOpacity(0.1)),
+                              ),
+                              child: Text(
+                                tech,
+                                style: const TextStyle(fontSize: 10, color: Colors.blue, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          )
                           .toList(),
-                    ),
-
-                  const SizedBox(height: 10),
-
-                  /// Features (Preview)
-                  if (project.features.isNotEmpty)
-                    Text(
-                      "Features: ${project.features.take(3).join(", ")}"
-                          "${project.features.length > 3 ? "..." : ""}",
-                      style: const TextStyle(fontSize: 12),
                     ),
 
                   const SizedBox(height: 12),
@@ -144,23 +161,14 @@ class ProjectTile extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 6,
                     children: [
-
                       if (project.githubUrl.isNotEmpty)
                         _buildLinkChip(Icons.code, "GitHub"),
-
                       if (project.liveUrl.isNotEmpty)
                         _buildLinkChip(Icons.link, "Live"),
-
                       if (project.playStoreUrl.isNotEmpty)
                         _buildLinkChip(Icons.android, "Play Store"),
-
                       if (project.appStoreUrl.isNotEmpty)
                         _buildLinkChip(Icons.apple, "App Store"),
-
-                      if (project.galleryImages.isNotEmpty)
-                        _buildLinkChip(
-                            Icons.photo_library,
-                            "${project.galleryImages.length} Images"),
                     ],
                   ),
 
@@ -171,12 +179,14 @@ class ProjectTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.edit),
+                        icon: const Icon(Icons.edit_note_rounded, color: Colors.blueGrey),
                         onPressed: onEdit,
+                        tooltip: "Edit Project",
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
+                        icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
                         onPressed: onDelete,
+                        tooltip: "Delete Project",
                       ),
                     ],
                   ),
@@ -227,17 +237,18 @@ class ProjectTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey.shade50,
+        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14),
+          Icon(icon, size: 14, color: Colors.blueGrey),
           const SizedBox(width: 4),
           Text(
             label,
-            style: const TextStyle(fontSize: 11),
+            style: TextStyle(fontSize: 10, color: Colors.grey.shade800),
           ),
         ],
       ),

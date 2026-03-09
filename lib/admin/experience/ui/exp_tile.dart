@@ -24,7 +24,7 @@ class ExperienceTile extends StatelessWidget {
             child: Icon(Icons.business_outlined),
             ),
           ),
-        title: Expanded(child: Text(experience.role, style: const TextStyle(fontSize: 16))),
+        title: Text(experience.role, style: const TextStyle(fontSize: 16)),
         subtitle: Row(
           children: [
             Text(

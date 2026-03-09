@@ -161,6 +161,10 @@ class _SkillDialogState extends State<SkillDialog> {
                     value: SkillCategoryType.systemWork,
                     child: Text("System Work"),
                   ),
+                  DropdownMenuItem(
+                    value: SkillCategoryType.others,
+                    child: Text("Others"),
+                  ),
                 ],
                 onChanged: (v) => setState(() => selectedCategory = v!),
               ),

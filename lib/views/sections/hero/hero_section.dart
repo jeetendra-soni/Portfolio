@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/model/personal_info_model.dart';
 import 'package:jeetendra_portfolio/configs/app_fonts.dart';
+import 'package:jeetendra_portfolio/constants/assets_const.dart';
 import 'package:jeetendra_portfolio/views/widgets/social_links.dart';
 import 'package:jeetendra_portfolio/utils/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,9 +10,9 @@ import '../../../utils/buttons/iconButton.dart';
 import '../../../utils/animated_container.dart';
 
 class HeroSection extends StatefulWidget {
-  final PersonalInfoModel profileInfo;
+  // final PersonalInfoModel profileInfo;
 
-  const HeroSection({super.key, required this.profileInfo});
+  const HeroSection({super.key});
 
   @override
   State<HeroSection> createState() => _HeroSectionState();
@@ -25,6 +26,8 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
 
   // For looping typewriter animation
   late AnimationController _typewriterController;
+  
+  final String _name = "Jeetendra Soni";
   
   final List<String> _expertiseTexts = [
     "Building Digital Products.",
@@ -135,7 +138,7 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                       slide: _slideAnimation,
                       scale: _scaleAnimation,
                       typewriterController: _typewriterController,
-                      name: widget.profileInfo.name,
+                      name: _name,
                       currentExpertise: _expertiseTexts[_currentTextIndex],
                       isTablet: false,
                     )
@@ -145,7 +148,7 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                       slide: _slideAnimation,
                       scale: _scaleAnimation,
                       typewriterController: _typewriterController,
-                      name: widget.profileInfo.name,
+                      name: _name,
                       currentExpertise: _expertiseTexts[_currentTextIndex],
                     )
                     : _HeroDesktop(
@@ -153,7 +156,7 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                       slide: _slideAnimation,
                       scale: _scaleAnimation,
                       typewriterController: _typewriterController,
-                      name: widget.profileInfo.name,
+                      name: _name,
                       currentExpertise: _expertiseTexts[_currentTextIndex],
                     ),
             ),
@@ -412,7 +415,7 @@ class _HeroTextContent extends StatelessWidget {
               icon: const Icon(Icons.send_rounded, size: 20, color: Colors.black),
               title: "Let's Talk",
               onTap: () {
-
+                openWhatsApp();
               },
             ),
             const _SecondaryCTA(),
@@ -569,7 +572,7 @@ class _AnimatedProfileState extends State<_AnimatedProfile>
                 ),
                 child: ClipOval(
                   child: Image.asset(
-                    "assets/images/profile.png",
+                    AssetsConst.profile,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.orangeAccent.shade400,

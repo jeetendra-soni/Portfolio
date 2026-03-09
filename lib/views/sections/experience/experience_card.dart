@@ -294,10 +294,11 @@ class _IndexBadge extends StatelessWidget {
         gradient: const LinearGradient(colors: [AppTheme.primary, Colors.black]),
       ),
       child: Center(
-        child: Text(
-          "${index + 1}.",
-          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: AppFonts.rowdiesFamily),
-        ),
+        child: Icon(Icons.business_outlined, color: Colors.white, size: size * 0.6),
+        // Text(
+        //   "${index + 1}.",
+        //   style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: AppFonts.rowdiesFamily),
+        // ),
       ),
     );
   }

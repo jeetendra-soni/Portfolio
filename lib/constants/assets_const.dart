@@ -18,7 +18,8 @@ class AssetsConst {
   static const indFlag = "$icons/ind_flag.png";
 
   /// Images
-  static const profile = "$images/profile.jpg";
+  static const profile = "$images/profile.png";
+  static const aboutProfile = "$images/setupImg.png";
   static const appStoreLogo = "$images/appStoreLogo.png";
   static const playStoreLogo = "$images/playStoreLogo.png";
 }

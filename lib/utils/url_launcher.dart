@@ -36,6 +36,16 @@ void urlLauncher({required String url}) async {
   }
 }
 
+Future<void> openWhatsApp() async {
+  final Uri url = Uri.parse("https://wa.me/7509005537"); // replace with your number
+
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Could not launch WhatsApp';
+  }
+}
+
 Future<void> openPhoneDialer({
   required BuildContext context,
   required String phoneNumber,

@@ -7,6 +7,7 @@ import 'package:jeetendra_portfolio/admin/personal_info/provider/personal_info_p
 import 'package:jeetendra_portfolio/views/sections/award_achievement/award_achivement.dart';
 import 'package:jeetendra_portfolio/views/sections/project%20/view/project_screen.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navigation_bar.dart';
+import 'configs/app_fonts.dart';
 import 'configs/theme_config.dart';
 import 'firebase_options.dart';
 import 'views/sections/aboutus/about.dart';
@@ -32,7 +33,7 @@ class PortfolioApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Developer Portfolio',
+      title: 'JEETENDRA SONI - App Developer',
       theme: getResponsiveTheme(context),
       home: const PortfolioPage(),
     );
@@ -76,16 +77,16 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
     );
   }
 
-  PersonalInfoModel? info;
+  // PersonalInfoModel? info;
 
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
-      info = await ref.read(personalInfoProvider.future);
-    });
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) async{
+  //     info = await ref.read(personalInfoProvider.future);
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +157,7 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                       key: homeKey,
                       background: Colors.black,
                       showBottomDivider: false,
-                      child: HeroSection(profileInfo: info!,),
+                      child: HeroSection(),
                     ),
                     SectionContainer(
                       key: aboutKey,
@@ -178,11 +179,11 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                       background: const Color(0xFFF5F5FF),
                       child: const ProjectsSection(),
                     ),
-                    SectionContainer(
-                      key: achievementKey,
-                      background: const Color(0xFFF5F7EE),
-                      child: const AwardsSection(),
-                    ),
+                    // SectionContainer(
+                    //   key: achievementKey,
+                    //   background: const Color(0xFFF5F7EE),
+                    //   child: const AwardsSection(),
+                    // ),
                     SectionContainer(
                       key: testimonialKey,
                       background: Colors.white,
@@ -253,7 +254,7 @@ class _MobileDrawer extends StatelessWidget {
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
-                          colors: [AppTheme.primaryBlue, AppTheme.secondaryCyan],
+                          colors: [AppTheme.primary, AppTheme.primary],
                         ),
                       ),
                       child: const CircleAvatar(
@@ -270,19 +271,20 @@ class _MobileDrawer extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       "JEETENDRA SONI",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w900,
                         fontSize: 22,
                         letterSpacing: 1.1,
+                        fontFamily: AppFonts.rowdiesFamily,
                       ),
                     ),
                     const Text(
                       "Mobile App Developer",
                       style: TextStyle(
-                        color: AppTheme.secondaryCyan,
+                        color: AppTheme.primary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -328,7 +330,7 @@ class _MobileDrawer extends StatelessWidget {
                     ElevatedButton(
                       onPressed: onContactTap,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryBlue,
+                        backgroundColor: AppTheme.primary,
                         minimumSize: const Size(double.infinity, 56),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),

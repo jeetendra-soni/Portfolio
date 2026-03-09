@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeetendra_portfolio/constants/assets_const.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SocialLinks extends StatelessWidget {
@@ -12,28 +13,34 @@ class SocialLinks extends StatelessWidget {
       isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
       children: [
         _SocialIcon(
-          assetPath: 'assets/icons/linkedin.png',
+          assetPath: AssetsConst.linkedin,
           url: 'https://linkedin.com/in/jeetendra-soni-5b1721175/',
           tooltip: 'LinkedIn',
           color: const Color(0xff0077b5),
         ),
         _SocialIcon(
-          assetPath: 'assets/icons/github.png',
+          assetPath: AssetsConst.github,
           url: 'https://github.com/Jeetendra-Soni',
           tooltip: 'GitHub',
           color: const Color(0xff333333),
         ),
         _SocialIcon(
-          assetPath: 'assets/icons/instagram.png',
+          assetPath: AssetsConst.instagram,
           url: 'https://instagram.com/itsjeetendrasoni',
           tooltip: 'Instagram',
           color: const Color(0xffe1306c),
         ),
         _SocialIcon(
-          assetPath: 'assets/icons/facebook.png',
+          assetPath: AssetsConst.facebook,
           url: 'https://facebook.com/JEr.JEETENDRA.SONI/',
           tooltip: 'Facebook',
           color: const Color(0xff1877f2),
+        ),
+        _SocialIcon(
+          assetPath: AssetsConst.twitter,
+          url: 'https://x.com/Jeetendra__Soni',
+          tooltip: 'Twitter',
+          color: const Color(0xff000000),
         ),
       ],
     );
