@@ -16,6 +16,7 @@ class MyNavigationBar extends StatelessWidget {
   final VoidCallback? onExperienceTap;
   final VoidCallback? onTestimonialTap;
   final VoidCallback? onMenuTap;
+  final VoidCallback? onBlogTap;
 
   const MyNavigationBar({
     super.key,
@@ -27,6 +28,7 @@ class MyNavigationBar extends StatelessWidget {
     this.onMenuTap,
     this.onExperienceTap,
     this.onTestimonialTap,
+    this.onBlogTap,
   });
 
   @override
@@ -59,6 +61,7 @@ class MyNavigationBar extends StatelessWidget {
               onContactTap: onContactTap,
               onExperienceTap: onExperienceTap,
               onTestimonialTap: onTestimonialTap,
+              onBlogTap: onBlogTap,
             );
           }),
         ),
@@ -75,6 +78,7 @@ class _DesktopNav extends StatelessWidget {
   final VoidCallback? onProjectsTap;
   final VoidCallback? onExperienceTap;
   final VoidCallback? onTestimonialTap;
+  final VoidCallback? onBlogTap;
 
   const _DesktopNav({
     this.onContactTap,
@@ -84,6 +88,7 @@ class _DesktopNav extends StatelessWidget {
     this.onProjectsTap,
     this.onExperienceTap,
     this.onTestimonialTap,
+    this.onBlogTap,
   });
 
   @override
@@ -129,7 +134,8 @@ class _DesktopNav extends StatelessWidget {
         _NavLink(title: "Experience", onTap: onExperienceTap),
         _NavLink(title: "Skills", onTap: onSkillsTap),
         _NavLink(title: "Projects", onTap: onProjectsTap),
-        _NavLink(title: "Testimonials", onTap: onTestimonialTap),
+        _NavLink(title: "Blogs", onTap: onBlogTap),
+        // _NavLink(title: "Testimonials", onTap: onTestimonialTap),
         const SizedBox(width: 24),
         ElevatedButton(
           onPressed: onContactTap,

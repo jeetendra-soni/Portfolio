@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jeetendra_portfolio/admin/award_achievement/ui/award_manager.dart';
+import 'package:jeetendra_portfolio/admin/blogs/ui/blog_page.dart';
 import 'package:jeetendra_portfolio/admin/experience/ui/exp_manager.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/ui/personal_info_page.dart';
 import 'package:jeetendra_portfolio/admin/projects/ui/project_manager.dart';
@@ -21,14 +22,13 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
 
   /// Pages for each tab
   final List<Widget> _pages = [
-    PersonalInfoPage(),
-    SkillManager(),
-    ExperienceManager(),
-    ProjectManager(),
-    AwardManager(),
+    const PersonalInfoPage(),
+    const SkillManager(),
+    const ExperienceManager(),
+    const ProjectManager(),
+    const AwardManager(),
+    const BlogPage(),
   ];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +57,16 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
                             ? NetworkImage(user!.photoURL!)
                             : null,
                         child: user?.photoURL == null
-                            ?  ClipOval(
-                          child: Image.asset(
-                            AssetsConst.profile,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: Colors.orangeAccent.shade400,
-                              child: Icon(Icons.person, color: Colors.white, size: 40),
-                            ),
-                          ),
-                        )
+                            ? ClipOval(
+                                child: Image.asset(
+                                  AssetsConst.profile,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    color: Colors.orangeAccent.shade400,
+                                    child: const Icon(Icons.person, color: Colors.white, size: 40),
+                                  ),
+                                ),
+                              )
                             : null,
                       ),
                       const SizedBox(height: 10),
@@ -90,16 +90,12 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
 
                 const SizedBox(height: 8),
 
-
-
                 /// --- MENU ITEMS ---
-
                 _drawerItem(
                   icon: Icons.person,
                   label: "Personal Info",
                   index: 0,
                 ),
-
                 _drawerItem(
                   icon: Icons.star,
                   label: "Skills",
@@ -120,7 +116,11 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
                   label: "Awards & Achievements",
                   index: 4,
                 ),
-
+                _drawerItem(
+                  icon: Icons.article,
+                  label: "Blogs",
+                  index: 5,
+                ),
 
                 const Spacer(),
 
@@ -138,9 +138,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
             ),
           ),
 
-          VerticalDivider(
-            width: 1,
-          ),
+          const VerticalDivider(width: 1),
 
           /// ---------- CONTENT ----------
           Expanded(
@@ -181,5 +179,4 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
       },
     );
   }
-
 }

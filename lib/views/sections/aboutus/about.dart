@@ -157,7 +157,7 @@ class _AboutText extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         Text(
-          'I am a Senior Flutter Developer with 3+ years of experience dedicated to crafting exceptional mobile and web experiences. My journey is defined by a passion for clean architecture, seamless animations, and building products that actually solve user problems.',
+          '''Flutter Developer with 3+ years of hands-on experience building high-quality mobile and web applications using Flutter. I specialize in creating scalable, performance-driven solutions with clean architecture, seamless UI/UX, and smooth, responsive animations.''',
           style: TextStyle(
             fontSize: 16,
             height: 1.8,
@@ -168,7 +168,8 @@ class _AboutText extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Specializing in building scalable, production-ready applications, I have worked across e-commerce, healthcare, and fintech domains, always pushing the boundaries of what is possible with Flutter.',
+          '''I leverage AI-assisted development and modern engineering practices to accelerate development, improve code quality, and deliver smarter digital products. My experience spans multiple domains including e-commerce, healthcare, fintech, social networking, real-time chat and messaging platforms, and insurance applications, where reliability, performance, and user experience are critical.
+I’m passionate about transforming ideas into scalable, user-centric applications that solve real-world problems while delivering fast, intuitive, and engaging digital experiences.''',
           style: TextStyle(
             fontSize: 16,
             height: 1.8,
@@ -206,8 +207,8 @@ class _AboutHighlights extends StatelessWidget {
           color: Colors.purple,
         ),
         _HighlightCard(
-          title: '10+',
-          subtitle: 'Global\nClients',
+          title: '8+',
+          subtitle: 'Internation\nProjects',
           icon: Icons.public_outlined,
           color: Colors.orange,
         ),

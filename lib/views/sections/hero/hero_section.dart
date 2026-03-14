@@ -395,7 +395,7 @@ class _HeroTextContent extends StatelessWidget {
         
         const SizedBox(height: 24),
         Text(
-          "I'm a Flutter & Dart Enthusiast with 3+ years of experience in crafting high-performance, scalable mobile and web applications with beautiful user interfaces.",
+          "Flutter & Dart Developer with 3+ years of experience building scalable mobile and web applications, using AI-powered and AI-assisted development to craft intelligent features and beautiful user experiences.",
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: TextStyle(
             color: Colors.white.withOpacity(0.9),

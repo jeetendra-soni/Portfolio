@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jeetendra_portfolio/admin/skills/repository/skill_repository.dart';
 import 'package:jeetendra_portfolio/constants/enums.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../model/skill_model.dart';
 
 class SkillDialog extends StatefulWidget {
@@ -40,16 +41,6 @@ class _SkillDialogState extends State<SkillDialog> {
 
     selectedLevel = widget.skill?.level;
     selectedCategory = widget.skill?.category;
-    if (widget.skill?.icon.isNotEmpty == true) {
-      final bytes = base64Decode(widget.skill!.icon);
-
-      if (kIsWeb) {
-        selectedIconBytes = bytes;
-      } else {
-        // For mobile: create preview from bytes
-        selectedIconBytes = bytes; // use Image.memory for preview
-      }
-    }
 
     super.initState();
   }
@@ -138,6 +129,10 @@ class _SkillDialogState extends State<SkillDialog> {
                     child: Text("Language"),
                   ),
                   DropdownMenuItem(
+                    value: SkillCategoryType.deployment,
+                    child: Text("Cloud & Deployment"),
+                  ),
+                  DropdownMenuItem(
                     value: SkillCategoryType.devTools,
                     child: Text("Dev Tools & CI/CD"),
                   ),
@@ -162,6 +157,14 @@ class _SkillDialogState extends State<SkillDialog> {
                     child: Text("System Work"),
                   ),
                   DropdownMenuItem(
+                    value: SkillCategoryType.database,
+                    child: Text("Database & Storage"),
+                  ),
+                  DropdownMenuItem(
+                    value: SkillCategoryType.aiDevelopment,
+                    child: Text("AI-Assisted Development"),
+                  ),
+                  DropdownMenuItem(
                     value: SkillCategoryType.others,
                     child: Text("Others"),
                   ),
@@ -179,11 +182,9 @@ class _SkillDialogState extends State<SkillDialog> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey),
                   ),
-                  child: selectedIcon == null && selectedIconBytes == null
-                      ? const Icon(Icons.add_photo_alternate, size: 32)
-                      : ClipRRect(
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: _buildIconPreview()
+                    child: _buildIconPreview(),
                   ),
                 ),
               ),
@@ -204,7 +205,7 @@ class _SkillDialogState extends State<SkillDialog> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepOrangeAccent,
                     ),
-                    child: Text("Save Skill", style: TextStyle(color: Colors.white),),
+                    child: const Text("Save Skill", style: TextStyle(color: Colors.white),),
                   ),
                 ],
               ),
@@ -217,20 +218,42 @@ class _SkillDialogState extends State<SkillDialog> {
 
 
   Widget _buildIconPreview() {
-    if (kIsWeb && selectedIconBytes != null) {
+    // 1. If we just picked an image on Web
+    if (selectedIconBytes != null) {
       return Image.memory(
         selectedIconBytes!,
         fit: BoxFit.cover,
       );
     }
 
-    if (!kIsWeb && selectedIcon != null) {
+    // 2. If we just picked an image on Mobile
+    if (selectedIcon != null) {
       return Image.file(
         selectedIcon!,
         fit: BoxFit.cover,
       );
     }
 
+    // 3. If there is an existing icon (Network URL or Base64 fallback)
+    if (widget.skill?.icon.isNotEmpty == true) {
+      if (widget.skill!.icon.startsWith('http')) {
+        return CachedNetworkImage(
+          imageUrl: widget.skill!.icon,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+          errorWidget: (context, url, error) => const Icon(Icons.broken_image),
+        );
+      } else {
+        // Support legacy base64 if it exists
+        try {
+          return Image.memory(base64Decode(widget.skill!.icon), fit: BoxFit.cover);
+        } catch (_) {
+          return const Icon(Icons.broken_image);
+        }
+      }
+    }
+
+    // 4. Placeholder
     return const Icon(Icons.add_photo_alternate, size: 32);
   }
 
@@ -244,14 +267,6 @@ class _SkillDialogState extends State<SkillDialog> {
 
     if (kIsWeb) {
       final bytes = await image.readAsBytes();
-
-      debugPrint("Picked image bytes length: ${bytes.length}");
-
-      if (bytes.isEmpty) {
-        debugPrint("Image bytes are EMPTY ❌");
-        return;
-      }
-
       setState(() {
         selectedIconBytes = bytes;
         selectedIcon = null;
@@ -264,18 +279,14 @@ class _SkillDialogState extends State<SkillDialog> {
     }
   }
 
-
-
   Future<void> _onSave() async {
     if (nameCtrl.text.trim().isEmpty) return;
     if (selectedLevel == null || selectedCategory == null) return;
 
     final repo = SkillRepository();
-
     String iconUrl = widget.skill?.icon ?? '';
 
     try {
-      /// 🔥 Upload icon if selected
       if (kIsWeb && selectedIconBytes != null) {
         iconUrl = await repo.uploadSkillIconWeb(selectedIconBytes!);
       } else if (!kIsWeb && selectedIcon != null) {
@@ -288,8 +299,8 @@ class _SkillDialogState extends State<SkillDialog> {
         experienceYears: int.tryParse(yearsCtrl.text) ?? 1,
         level: selectedLevel!,
         category: selectedCategory!,
-        icon: iconUrl, // ✅ Save download URL
-        order: 0,
+        icon: iconUrl,
+        order: widget.skill?.order ?? 0,
       );
 
       if (widget.skill == null) {
@@ -298,14 +309,11 @@ class _SkillDialogState extends State<SkillDialog> {
         await repo.updateSkill(skill);
       }
 
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context);
     } catch (e) {
       debugPrint("Error saving skill: $e");
     }
   }
-
-
-
 }
 
 
@@ -349,7 +357,7 @@ class SkillDeleteDialog extends StatelessWidget {
 
             /// Title
             const Text(
-              "Delete Project",
+              "Delete Skill",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -398,9 +406,9 @@ class SkillDeleteDialog extends StatelessWidget {
                     ),
                   ),
                   onPressed: () => Navigator.pop(context),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 0),
-                    child: const Text("Cancel"),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Text("Cancel"),
                   ),
                 ),
 
@@ -418,9 +426,9 @@ class SkillDeleteDialog extends StatelessWidget {
                     Navigator.pop(context);
                     onConfirm();
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 0),
-                    child: const Text(
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Text(
                       "Delete",
                       style: TextStyle(color: Colors.white),
                     ),

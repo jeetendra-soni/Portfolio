@@ -2,9 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jeetendra_portfolio/admin/dashboard/admin_dashboard.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/model/personal_info_model.dart';
 import 'package:jeetendra_portfolio/admin/personal_info/provider/personal_info_provider.dart';
 import 'package:jeetendra_portfolio/views/sections/award_achievement/award_achivement.dart';
+import 'package:jeetendra_portfolio/views/sections/blogs/blog_section.dart';
 import 'package:jeetendra_portfolio/views/sections/project%20/view/project_screen.dart';
 import 'package:jeetendra_portfolio/views/widgets/navigation_bar/navigation_bar.dart';
 import 'configs/app_fonts.dart';
@@ -33,7 +35,7 @@ class PortfolioApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'JEETENDRA SONI - App Developer',
+      title: 'JEETENDRA SONI | Flutter & Dart Expert',
       theme: getResponsiveTheme(context),
       home: const PortfolioPage(),
     );
@@ -58,8 +60,7 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
   final skillsKey = GlobalKey();
   final experienceKey = GlobalKey();
   final portfolioKey = GlobalKey();
-  final achievementKey = GlobalKey();
-  final testimonialKey = GlobalKey();
+  final blogKey = GlobalKey();
   final contactKey = GlobalKey();
 
   void scrollTo(GlobalKey key) {
@@ -77,17 +78,6 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
     );
   }
 
-  // PersonalInfoModel? info;
-
-
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) async{
-  //     info = await ref.read(personalInfoProvider.future);
-  //   });
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,8 +93,8 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
             onAboutTap: () => scrollTo(aboutKey),
             onSkillsTap: () => scrollTo(skillsKey),
             onExperienceTap: () => scrollTo(experienceKey),
-            onTestimonialTap: () => scrollTo(testimonialKey),
             onProjectsTap: () => scrollTo(portfolioKey),
+            onBlogTap: () => scrollTo(blogKey),
             onContactTap: () => scrollTo(contactKey),
             onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
           ),
@@ -133,8 +123,8 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
           scrollTo(portfolioKey);
           Navigator.pop(context);
         },
-        onTestimonialTap: () {
-          scrollTo(testimonialKey);
+        onBlogTap: () {
+          scrollTo(blogKey);
           Navigator.pop(context);
         },
         onContactTap: () {
@@ -144,11 +134,10 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
       ),
       body: Stack(
         children: [
-          const SizedBox(height: kTextTabBarHeight,),
+          const SizedBox(height: kTextTabBarHeight),
           CustomScrollView(
             controller: _scrollController,
             slivers: [
-              /// ---------- CONTENT ----------
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +146,7 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                       key: homeKey,
                       background: Colors.black,
                       showBottomDivider: false,
-                      child: HeroSection(),
+                      child: const HeroSection(),
                     ),
                     SectionContainer(
                       key: aboutKey,
@@ -171,7 +160,7 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                     ),
                     SectionContainer(
                       key: skillsKey,
-                      background: const Color(0xFFF5F7FA),
+                      background: Colors.white70,
                       child: const SkillsSection(),
                     ),
                     SectionContainer(
@@ -179,15 +168,10 @@ class _PortfolioPageState extends ConsumerState<PortfolioPage> {
                       background: const Color(0xFFF5F5FF),
                       child: const ProjectsSection(),
                     ),
-                    // SectionContainer(
-                    //   key: achievementKey,
-                    //   background: const Color(0xFFF5F7EE),
-                    //   child: const AwardsSection(),
-                    // ),
                     SectionContainer(
-                      key: testimonialKey,
+                      key: blogKey,
                       background: Colors.white,
-                      child: const TestimonialSection(),
+                      child: const BlogSection(),
                     ),
                     SectionContainer(
                       key: contactKey,
@@ -211,23 +195,21 @@ class _MobileDrawer extends StatelessWidget {
   final VoidCallback onExperienceTap;
   final VoidCallback onSkillsTap;
   final VoidCallback onProjectsTap;
+  final VoidCallback onBlogTap;
   final VoidCallback onContactTap;
-  final VoidCallback onTestimonialTap;
 
   const _MobileDrawer({
     required this.onHomeTap,
     required this.onAboutTap,
     required this.onSkillsTap,
     required this.onProjectsTap,
+    required this.onBlogTap,
     required this.onContactTap,
     required this.onExperienceTap,
-    required this.onTestimonialTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Drawer(
       backgroundColor: AppTheme.darkBackground,
       child: Container(
@@ -245,8 +227,7 @@ class _MobileDrawer extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                 child: Column(
                   children: [
                     Container(
@@ -298,60 +279,25 @@ class _MobileDrawer extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    _DrawerItem(
-                        icon: Icons.home_rounded, title: "Home", onTap: onHomeTap),
-                    _DrawerItem(
-                        icon: Icons.person_rounded,
-                        title: "About",
-                        onTap: onAboutTap),
-                    _DrawerItem(
-                        icon: Icons.history_edu_rounded,
-                        title: "Experience",
-                        onTap: onExperienceTap),
-                    _DrawerItem(
-                        icon: Icons.settings_suggest_rounded,
-                        title: "Skills",
-                        onTap: onSkillsTap),
-                    _DrawerItem(
-                        icon: Icons.rocket_launch_rounded,
-                        title: "Projects",
-                        onTap: onProjectsTap),
-                    _DrawerItem(
-                        icon: Icons.reviews_rounded,
-                        title: "Testimonials",
-                        onTap: onTestimonialTap),
+                    _DrawerItem(icon: Icons.home_rounded, title: "Home", onTap: onHomeTap),
+                    _DrawerItem(icon: Icons.person_rounded, title: "About", onTap: onAboutTap),
+                    _DrawerItem(icon: Icons.history_edu_rounded, title: "Experience", onTap: onExperienceTap),
+                    _DrawerItem(icon: Icons.settings_suggest_rounded, title: "Skills", onTap: onSkillsTap),
+                    _DrawerItem(icon: Icons.rocket_launch_rounded, title: "Projects", onTap: onProjectsTap),
+                    _DrawerItem(icon: Icons.article_rounded, title: "Blogs", onTap: onBlogTap),
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(30),
-                child: Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: onContactTap,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
-                        minimumSize: const Size(double.infinity, 56),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        "Hire Me",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Version 1.0.0",
-                      style: TextStyle(color: Colors.white24, fontSize: 12),
-                    ),
-                  ],
+                child: ElevatedButton(
+                  onPressed: onContactTap,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                    minimumSize: const Size(double.infinity, 56),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                  child: const Text("Hire Me", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
               ),
             ],
@@ -367,33 +313,19 @@ class _DrawerItem extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const _DrawerItem({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
+  const _DrawerItem({required this.icon, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 30),
       leading: Icon(icon, color: Colors.white70, size: 22),
-      title: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.white70,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+      title: Text(title, style: const TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w500)),
       onTap: onTap,
-      hoverColor: AppTheme.primaryBlue.withOpacity(0.1),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     );
   }
 }
 
-/// ---------------- SECTION CONTAINER ----------------
 class SectionContainer extends StatelessWidget {
   final Widget child;
   final Color background;
@@ -416,76 +348,15 @@ class SectionContainer extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: background,
-      child: Column(
-        children: [
-          if (showTopDivider) const SectionWaveDivider(flip: true),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-              vertical: 60,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1200),
-              child: child,
-            ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 60),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            child: child,
           ),
-          if (showBottomDivider)
-            const SectionWaveDivider(
-              flip: true,
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// ---------------- WAVE DIVIDER ----------------
-class SectionWaveDivider extends StatelessWidget {
-  final bool flip;
-  const SectionWaveDivider({super.key, this.flip = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 5,
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.black,
-            Colors.white,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
         ),
       ),
-      child: Transform(
-        alignment: Alignment.center,
-        transform: flip ? Matrix4.rotationX(3.1416) : Matrix4.identity(),
-        child: CustomPaint(painter: _WavePainter()),
-      ),
     );
   }
-}
-
-class _WavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white;
-    final path = Path()
-      ..lineTo(0, size.height * .6)
-      ..quadraticBezierTo(
-        size.width / 2,
-        size.height * 10,
-        size.width,
-        size.height * 0.5,
-      )
-      ..lineTo(size.width, 0)
-      ..close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
